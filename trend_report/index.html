@@ -1,1 +1,2740 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게임 트렌드 분석 — 2026-04</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+  :root {
+    --bg:#0d1117; --bg2:#161b22; --bg3:#21262d;
+    --border:#30363d; --text:#e6edf3; --muted:#8b949e;
+    --accent:#58a6ff; --green:#3fb950; --red:#f85149;
+    --yellow:#d29922; --purple:#bc8cff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Noto Sans KR',sans-serif; font-size:14px; line-height:1.6; }
+  .header { background:linear-gradient(135deg,#1a2332,#0d1117); border-bottom:1px solid var(--border); padding:28px 40px; display:flex; align-items:center; justify-content:space-between; }
+  .header h1 { font-size:20px; font-weight:700; color:var(--purple); }
+  .header .meta { color:var(--muted); font-size:12px; text-align:right; line-height:1.8; }
+  .tabs { background:var(--bg2); border-bottom:1px solid var(--border); padding:0 40px; display:flex; gap:4px; }
+  .tabs a { display:inline-block; padding:12px 18px; font-size:13px; font-weight:600; color:var(--muted); border-bottom:2px solid transparent; text-decoration:none; }
+  .tabs a.active { color:var(--purple); border-color:var(--purple); font-weight:700; }
+  .container { max-width:1400px; margin:0 auto; padding:32px 40px; }
+  .section { margin-bottom:40px; }
+  .section-title { font-size:15px; font-weight:700; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
+  .badge { display:inline-block; padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+  .badge-red { background:rgba(248,81,73,.15); color:var(--red); border:1px solid rgba(248,81,73,.3); }
+  .badge-blue { background:rgba(88,166,255,.15); color:var(--accent); border:1px solid rgba(88,166,255,.3); }
+  .badge-purple { background:rgba(188,140,255,.15); color:var(--purple); border:1px solid rgba(188,140,255,.3); }
+  .badge-yellow { background:rgba(210,153,34,.15); color:var(--yellow); border:1px solid rgba(210,153,34,.3); }
+  .summary-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:32px; }
+  .card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:18px 20px; }
+  .card .label { color:var(--muted); font-size:12px; margin-bottom:6px; }
+  .card .value { font-size:28px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+  .card .sub { color:var(--muted); font-size:11px; margin-top:4px; }
+  .alert-columns { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .alert-column-title { font-size:14px; font-weight:700; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid; }
+  .alert-column-title.rise { color:var(--red); border-color:var(--red); }
+  .alert-column-title.fall { color:var(--accent); border-color:var(--accent); }
+  .alert-list { display:flex; flex-direction:column; gap:10px; }
+  .alert-item { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:14px 16px; }
+  .alert-item.rise { border-left:3px solid var(--red); }
+  .alert-item.fall { border-left:3px solid var(--accent); }
+  .alert-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+  .alert-game { font-weight:700; font-size:14px; }
+  .alert-date { color:var(--muted); font-size:11px; font-family:'JetBrains Mono',monospace; }
+  .alert-rate { font-weight:700; font-family:'JetBrains Mono',monospace; font-size:13px; }
+  .rate-up { color:var(--red); }
+  .rate-down { color:var(--accent); }
+  .alert-amounts { font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-bottom:8px; }
+  .ai-result { background:var(--bg3); border-radius:6px; padding:10px 14px; font-size:13px; line-height:1.7; border-left:2px solid var(--accent); margin-top:8px; }
+  .ai-label { color:var(--accent); font-size:11px; font-weight:700; margin-bottom:4px; }
+  .news-list { margin-top:8px; }
+  .news-item { font-size:11px; color:var(--muted); padding:4px 0; border-top:1px solid var(--border); }
+  .news-item a { color:var(--accent); text-decoration:none; }
+  footer { text-align:center; color:var(--muted); font-size:11px; padding:20px 40px; border-top:1px solid var(--border); margin-top:40px; }
+  @media (max-width:768px) {
+    .alert-columns { grid-template-columns:1fr; }
+    .container { padding:16px; }
+    .header { padding:16px; flex-direction:column; gap:8px; }
+    .summary-cards { grid-template-columns:repeat(2,1fr); }
+    .tabs { padding:0 16px; }
+  }
+</style>
+</head>
+<body>
 
+<div class="header">
+  <div>
+    <div style="color:var(--muted);font-size:12px;margin-bottom:4px;">📊 PTS 거래데이터 분석</div>
+    <h1>게임별 트렌드 분석 리포트 — 2026-04</h1>
+  </div>
+  <div class="meta">
+    자동 생성: 2026-04-22 18:05<br>
+    7일이동평균: 178건 &nbsp;|&nbsp; 전월대비: 0건
+  </div>
+</div>
+
+<div class="tabs">
+  <a href="https://hyoeun-mkt.github.io/trade/daily_report/">📅 전일 대비</a>
+  <a href="https://hyoeun-mkt.github.io/trade/trend_report/" class="active">📈 트렌드 분석</a>
+</div>
+
+<div class="container">
+
+  <div class="summary-cards">
+    <div class="card">
+      <div class="label">7일 이동평균 이상</div>
+      <div class="value" style="color:var(--purple)">178</div>
+      <div class="sub">±15% 기준</div>
+    </div>
+    <div class="card">
+      <div class="label">전월 대비 이상</div>
+      <div class="value" style="color:var(--yellow)">0</div>
+      <div class="sub">2026-03 평균 기준</div>
+    </div>
+    <div class="card">
+      <div class="label">급등</div>
+      <div class="value" style="color:var(--red)">69</div>
+      <div class="sub">전체 기준</div>
+    </div>
+    <div class="card">
+      <div class="label">급락</div>
+      <div class="value" style="color:var(--accent)">109</div>
+      <div class="sub">전체 기준</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      📈 트렌드 이상 감지
+      <span class="badge badge-purple">178건</span>
+    </div>
+    <div class="alert-columns">
+      <div>
+        <div class="alert-column-title rise">🔺 급등 69건</div>
+        <div class="alert-list">
+
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">아이온2</span>
+          <span class="alert-date">26/04/09</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+32.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 520,226,717원 → 당일: 686,713,110원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 아이온2 거래 급등 분석
+
+**전일 거래 기록이 없다가 당일 약 6.8억 원의 거래가 발생한 것으로 보아, 게임 복귀나 신규 업데이트 이후 플레이어들의 거래 재개 또는 시즌 변화에 따른 수급 조정이 주요 원인으로 추정됩니다.** 관련 뉴스 부재로 미루어 공식 공지 전 시장 반응이 먼저 나타난 것으로 보이며, 주중 업데이트나 이벤트 시작 시점과의 연관성 확인이 필요합니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">아이온2</span>
+          <span class="alert-date">26/04/10</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+52.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 543,499,636원 → 당일: 830,102,360원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 아이온2 거래 급등 분석
+
+전일 거래가 전무했던 상황에서 당일 83억 원대의 거래가 발생한 것으로 보아, **신규 업데이트나 이벤트 시작, 또는 시즌 개편** 등으로 인한 플레이어의 활동 재개가 주요 원인으로 추정됩니다. 공식 뉴스가 없더라도 게임 내 이벤트나 패치가 시행되었을 가능성이 높으며, **주말 진입(04/10이 토요일 추정)** 으로 인한 거래량 증가도 부분적으로 영향을 미쳤을 것으로 예상됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리</span>
+          <span class="alert-date">26/04/04</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+28.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 180,929,590원 → 당일: 232,522,010원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 메이플스토리 거래 급등 분석
+
+04월 4일 거래액이 급증한 것으로 보아, **주말 또는 월초 수급 증가**에 따른 자연스러운 거래량 상승으로 판단됩니다. 전일 거래가 없었던 점을 고려하면 **정기 업데이트나 신규 콘텐츠 패치** 직후의 활성화 또는 **월초 이벤트 및 보상 시즌**으로 인한 플레이어들의 아이템 거래 수요 증가가 주요 원인으로 추측됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리</span>
+          <span class="alert-date">26/04/11</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+38.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 173,490,464원 → 당일: 240,664,270원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 메이플스토리 거래 급등 분석
+
+전일 거래가 0원에서 당일 240,664,270원으로 급증한 것으로 보아, **데이터 집계 오류 또는 거래 시스템 복구**에 따른 일시적 증가로 추정됩니다. 별도의 뉴스 없이 순수 거래량만 증가한 점을 고려하면, **주말 거래 활성화 또는 정기 업데이트/이벤트 시작**에 따른 자연스러운 수요 증가일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리</span>
+          <span class="alert-date">26/04/12</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+20.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 174,653,644원 → 당일: 211,109,160원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 메이플스토리 거래 급등 분석
+
+**전일 거래가 전무했던 상황에서 당일 2억 원대의 거래가 발생한 것으로 보아, 특정 아이템이나 계정에 대한 산발적 거래가 이루어진 것으로 추정됩니다.** 뉴스 보도가 없는 점을 고려하면 게임 내 이벤트나 신규 업데이트보다는 개인 거래자의 대금 결제, 시즌 변화에 따른 장비 거래 수요, 또는 스포츠 경기/휴일 등으로 인한 일시적 수요 증가의 가능성이 높습니다. 추가 정보 확인 시 더 정확한 원인 파악이 가능할 것으로 보입니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리</span>
+          <span class="alert-date">26/04/17</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+74.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 189,424,021원 → 당일: 330,616,240원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 메이플스토리 거래 급등 분석
+
+04월 17일의 급등은 **주말 거래량 증가**와 **시즌 업데이트 주기**가 주요 원인으로 보입니다. 전일 거래가 0원에서 당일 33억원대로 급증한 것은 주말 활동 증가와 함께 메이플스토리의 정기 업데이트(보통 월, 목 또는 주말) 직후 아이템 거래 수요 증가의 결과로 판단됩니다. 추가적으로 시즌 이벤트나 신규 콘텐츠 오픈에 따른 필수 장비 거래 활성화도 영향을 미쳤을 가능성이 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리월드</span>
+          <span class="alert-date">26/04/19</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+29.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 177,011,556원 → 당일: 229,552,590원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 메이플스토리월드 거래 급등 분석
+
+전일 거래 기록이 없었던 상태에서 당일 약 2.3억 원의 거래가 발생하며 급등을 기록했습니다. 공식 뉴스가 없는 점으로 보아 **신규 아이템 출시, 게임 내 이벤트 진행, 또는 주말 거래량 증가** 등 정기적인 게임 운영 사이클에 따른 자연스러운 수요 증가로 추정됩니다. 거래 건수 정보 부재로 대량 거래인지 소액 다건 거래인지는 파악이 필요합니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/04/10</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+26.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 80,543,034원 → 당일: 102,035,710원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 로스트아크 거래 급등 분석
+
+전일 거래가 전무했던 상황에서 당일 약 1억 원대의 거래가 발생한 것으로, **주말(04/10)의 플레이어 활동 증가에 따른 자연스러운 거래량 회복**으로 추정됩니다. 공식 뉴스 부재 시 정기 주간 업데이트나 시즌 이벤트 진행 여부를 확인하면 더 정확한 원인 파악이 가능할 것으로 보입니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/04/11</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+45.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 82,866,724원 → 당일: 120,153,320원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 로스트아크 거래 급등 분석
+
+전일 거래 기록이 없다가 당일 120백만 원대의 거래가 발생한 것으로 보아, **신규 업데이트나 정기 패치 후 아이템 수급 변화**로 인한 것으로 추측됩니다. 뉴스 부재 시점을 고려하면 **주말 게이밍 수요 증가** 또는 **시즌 초반/이벤트 기간의 자연스러운 거래량 증가**일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/04/12</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+15.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 85,099,811원 → 당일: 98,178,890원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 로스트아크 거래 급등 분석
+
+전일 거래가 0원에서 당일 약 9,818만원으로 급증한 것으로 보아, **주말(04/12는 토요일)의 일반적인 거래량 증가 패턴**으로 판단됩니다. 공식 뉴스 부재 시에는 정기 주말 활동 증가나 월중 구간 이벤트/시즌 콘텐츠 진행이 주요 요인일 가능성이 높습니다. 건수 데이터 부재로 정확한 분석에 제약이 있으나, 일반적인 게임 거래 활성화 시점으로 추측됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/04/18</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+39.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 79,912,463원 → 당일: 111,125,780원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 로스트아크 거래 급등 분석
+
+전일 거래가 없다가 당일 111백만 원대의 거래가 발생한 것으로 보아, **특정 아이템이나 계정에 대한 대량 거래**가 이루어진 것으로 추정됩니다. 공식 뉴스 부재 시 **주말 효과(04/18은 토요일)로 인한 개인 거래 활성화** 또는 **게임 내 신규 콘텐츠/이벤트 준비에 따른 선제적 아이템 수급**이 원인일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/04/19</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+30.3%</span>
+        </div>
+        <div class="alert-amounts">기준: 78,622,814원 → 당일: 102,426,330원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 로스트아크 거래 급등 분석
+
+전일 거래 기록이 없다가 당일 약 1억 원대의 거래가 발생한 것으로 보아, **주말(04/19 토요일)을 맞춘 정기적인 유저 활동 증가**가 주요 원인으로 보입니다. 공식 뉴스가 없는 점을 고려하면 **신규 업데이트나 특별 이벤트보다는 주말 여유 시간을 활용한 자연스러운 거래량 증가**로 해석됩니다. 시즌 진행 중 일상적인 아이템 거래 수요가 주말에 집중된 것으로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/05</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+129.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 73,068,530원 → 당일: 167,723,930원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 급등 분석
+
+**전일 거래가 0원에서 당일 167백만원 이상으로 급증한 것으로 보아, 기존 거래 중단 상태에서 정상화된 것으로 판단됩니다.** 뉴스 부재 시점에서는 정기 점검 완료, 서버 복구, 또는 게임 내 주말 이벤트/시즌 업데이트 등이 거래 재개를 촉발한 것으로 추측됩니다. 특히 4월 중순의 시즌 변경이나 정기 이벤트가 유저들의 장비 거래 수요를 증가시킨 것 같습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+91.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 81,631,445원 → 당일: 155,976,240원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 급등 분석
+
+전일 거래 기록이 없었던 상황에서 당일 갑작스럽게 155백만 원대의 거래가 발생한 것으로 보아, **특정 길드 전쟁, 보스 이벤트, 또는 신규 아이템 업데이트**로 인한 수급 수요가 갑자기 발생했을 가능성이 높습니다. 공식 뉴스 없이도 **게임 내 이벤트나 시즌 업데이트로 인한 장비 수급 필요**가 급증한 것으로 추측되며, 4월 초라는 시점을 고려할 때 **분기별 대형 업데이트나 신규 콘텐츠 오픈**의 영향일 수 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/08</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+112.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 92,252,130원 → 당일: 196,002,570원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 급등 분석
+
+**전일 거래가 없었던 상태에서 당일 약 1.96억원의 거래가 발생한 것으로, 뉴스 공지가 없는 점을 고려하면 주말 수요 증가 또는 게임 내 정기 이벤트/시즌 업데이트 시점일 가능성이 높습니다.** 특히 4월 초 시점의 거래 재개는 신규 콘텐츠 추가나 시즌 리셋 등으로 인한 자연스러운 거래량 증가로 해석됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/14</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+135.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 74,260,981원 → 당일: 174,913,610원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 급등 분석
+
+**전일 거래 기록이 없던 상태에서 당일 약 1.75억 원대의 거래가 발생한 것으로, 주말 효과(04/14는 토요일)에 따른 일반 사용자들의 거래량 증가가 주요 원인으로 보입니다.** 공식 뉴스가 없는 점을 감안하면, 주기적인 게임 이벤트나 신규 콘텐츠 업데이트보다는 주말의 자연스러운 거래 활동 증가로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/18</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+28.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 47,799,603원 → 당일: 61,354,300원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 급등 분석
+
+**04/18은 금요일로, 주말을 앞두고 게이머들의 아이템 거래 수요가 증가한 것으로 보입니다.** 전일 거래가 없었던 점을 고려하면 특정 업데이트나 이벤트 시작, 또는 시즌 변경 등으로 인한 게임 활성화로 인해 거래 재개된 것으로 추정됩니다. 주말 게임 플레이 증가에 따른 자연스러운 거래량 상승으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/19</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+19.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 52,865,957원 → 당일: 62,917,670원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 급등 분석
+
+전일 거래가 0원에서 당일 62,917,670원으로 급증한 것으로 보아, **데이터 집계 오류 또는 거래 플랫폼 복구**로 인한 일시적 급등으로 추정됩니다. 뉴스가 없는 점을 감안하면 **주말(토요일) 수요 회복** 또는 **정기 업데이트/이벤트 진행**에 따른 자연스러운 거래량 증가일 가능성도 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">던전앤파이터</span>
+          <span class="alert-date">26/04/12</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+25.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 62,933,183원 → 당일: 78,668,410원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 던전앤파이터 거래 급등 분석
+
+전일 거래 기록이 없다가 당일 약 7,800만 원의 거래가 발생한 것으로 보아, **주말(토요일)을 맞이한 사용자 활동 증가**와 **정기 업데이트 또는 이벤트 진행**이 주요 원인으로 추정됩니다. 특히 뉴스 보도가 없는 점을 고려하면 **게임 내 루틴 이벤트나 주간 던전 오픈** 등 정례적인 콘텐츠가 거래 활성화를 촉발했을 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">던전앤파이터</span>
+          <span class="alert-date">26/04/17</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+21.2%</span>
+        </div>
+        <div class="alert-amounts">기준: 59,054,609원 → 당일: 71,568,810원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 던전앤파이터 거래 급등 분석
+
+전일 거래 기록이 없다가 당일 71,568,810원의 거래가 발생한 것으로 보아, **주말 진입(금요일)에 따른 플레이어 활동 증가** 또는 **정기 업데이트/이벤트 시즌** 시작의 영향으로 추정됩니다. 뉴스 보도가 없는 점으로 미루어 특정 대형 이슈보다는 **게임 내 루틴 콘텐츠 운영(주간 던전, 시즌 진행, 에바)** 에 따른 자연스러운 거래량 회복이 주요 원인으로 보입니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">바람의전설</span>
+          <span class="alert-date">26/04/04</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+111.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 70,495,333원 → 당일: 149,000,000원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 바람의전설 거래 급등 분석
+
+**전일 거래 0원에서 당일 1억 4,900만 원으로 급증한 것으로 보아, 해당 게임의 거래가 재개되거나 신규 수급이 발생한 것으로 판단됩니다.** 뉴스 보도가 없는 점을 고려하면 정기 업데이트, 신규 시즌 시작, 또는 장기간 단절된 거래의 재개 가능성이 높습니다. **주말 효과와 함께 게임 내 이벤트나 제한된 기간의 아이템 출시 등이 거래 활성화를 촉발했을 가능성이 있습니다.**</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">바람의전설</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+98.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 76,097,200원 → 당일: 151,229,120원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 바람의전설 거래 급등 분석
+
+전일 거래가 0원에서 당일 151,229,120원으로 급증한 것으로 보아, **게임 재출시, 대규모 업데이트, 또는 신규 이벤트 시작** 등으로 인해 거래 시장이 활성화된 것으로 추정됩니다. 공식 뉴스가 없는 점을 감안하면 **커뮤니티 입소문이나 숨겨진 패치, 시즌 갱신** 등이 자발적인 거래 수요를 촉발했을 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">바람의전설</span>
+          <span class="alert-date">26/04/11</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+27.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 95,718,187원 → 당일: 122,000,000원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 바람의전설 거래 급등 분석
+
+**전일 거래가 없다가 당일 1억 2천만 원대의 거래가 발생한 것으로 보아, 게임 내 주요 업데이트나 신규 콘텐츠 출시, 혹은 제한된 기간의 특별 이벤트가 진행되면서 플레이어들의 아이템 거래 수요가 급증한 것으로 추측됩니다.** 공식 뉴스가 없는 점으로 볼 때 소규모 핫픽스나 커뮤니티 입소문을 통한 유저 참여 증가일 가능성도 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">바람의전설</span>
+          <span class="alert-date">26/04/12</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+26.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 91,218,187원 → 당일: 115,000,000원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 바람의전설 거래 급등 분석
+
+전일 거래가 전혀 없었던 상태에서 당일 115억 원의 거래가 발생한 것으로, **게임 내 주요 업데이트나 이벤트 시작, 또는 신규 아이템 출시로 인한 수요 급증**이 가장 유력한 원인으로 보입니다. 뉴스 보도가 없다면 게임사의 **공식 공지사항이나 인게임 알림을 통한 소식 전파**로 거래자들이 빠르게 반응한 것으로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">26/04/04</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+15.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 45,662,397원 → 당일: 52,906,870원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 디아블로2:레저렉션 거래 급등 분석
+
+전일 거래 기록이 없다가 당일 약 5,290만 원의 거래가 발생한 것으로 보아, **정기 유지보수 완료 후 서버 재개** 또는 **주말 게이밍 수요 증가**에 따른 것으로 추측됩니다. 공식 뉴스가 없는 점을 고려하면 **특정 아이템 드롭률 변화나 시즌 보상 배분** 같은 게임 내 이벤트가 거래 활성화를 촉발했을 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">26/04/11</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+34.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 41,488,009원 → 당일: 55,750,960원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 디아블로2:레저렉션 거래 급등 분석
+
+**전일 거래 기록이 없다가 당일 55백만 원대의 거래가 발생한 것으로 보아, 특정 아이템에 대한 수요 증가나 가격 조정 후 거래 재개의 가능성이 높습니다.** 공식 뉴스가 없는 점을 감안하면 커뮤니티 내 핫딜 정보 공유나 게임 내 이벤트/시즌 변화에 따른 유저들의 거래 활동 증가로 추측됩니다. **주말(토요일)에 해당하는 시점에서 일반 유저들의 거래 참여도가 높아진 것도 영향을 미쳤을 것으로 판단됩니다.**</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/04/04</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+18.3%</span>
+        </div>
+        <div class="alert-amounts">기준: 37,512,683원 → 당일: 44,386,970원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거상 거래 급등 분석
+
+전일 거래가 전혀 없다가 당일 4,400만 원대의 거래가 발생한 것으로 보아, **특정 플레이어의 대량 매도 또는 귀중 아이템 거래**가 이루어진 것으로 추정됩니다. 공식 뉴스가 없는 점을 감안하면 **게임 내 이벤트 종료, 시즌 변경, 또는 개인 거래자의 자산 정리**에 따른 일시적 거래 증가일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/04/09</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+21.2%</span>
+        </div>
+        <div class="alert-amounts">기준: 32,527,220원 → 당일: 39,438,170원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거상 거래 급등 분석
+
+**전일 거래 없음에서 당일 약 3,944만 원 규모의 거래가 발생한 것으로 보아, 게임 내 주요 이벤트나 신규 콘텐츠 업데이트 또는 시즌 변경으로 인한 플레이어들의 거래 재개 현상으로 추정됩니다.** 특히 4월 시즌 변화 시점이나 게임사의 정기 패치 일정과 맞물렸을 가능성이 높습니다. **뉴스 보도 전 사전 공지나 커뮤니티 소식만으로도 거래량이 증가했을 수 있으므로, 공식 업데이트 일정 확인이 필요합니다.**</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/04/10</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+24.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 32,223,180원 → 당일: 40,263,100원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거상 거래 급등 분석
+
+전일 거래 실적이 없었던 상태에서 당일 약 4,026만 원의 거래가 발생하며 급등한 것으로 보입니다. **공식 뉴스 부재로 보아 정기 업데이트, 주말 수요 증가, 또는 게임 내 제한된 기간 이벤트 진행** 등이 원인으로 추측됩니다. 추가적으로 **개인 유저들의 계정/아이템 정리 시즌 또는 신규 콘텐츠 접근 과정에서의 자연스러운 거래량 회복**일 가능성도 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/04/11</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+22.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 33,393,733원 → 당일: 40,757,860원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거상 거래 급등 분석
+
+전일 거래가 0원에서 당일 약 4,075만원으로 급증한 것으로 보아, **특정 이벤트나 업데이트 후 거래 재개**된 것으로 추측됩니다. 공식 뉴스가 없는 점을 고려하면 **주말 거래 활성화(4월 11일 목요일이지만 신규 시즌/이벤트 시작)** 또는 **게임 내 상품 재입고/한정 아이템 출시**로 인한 일시적 수요 증가가 원인으로 보입니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/04/12</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+60.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 32,875,289원 → 당일: 52,620,950원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거상 거래 급등 분석
+
+전일 거래가 전무한 상태에서 당일 5,262만원의 거래량이 발생한 것으로, **절대적 거래량은 크지 않으나 변동률상 급등으로 표기된 것**으로 보입니다. 주말(04/12는 토요일)을 맞아 **플레이어들의 거래 활동 재개 또는 정기 이벤트/업데이트 일정**이 영향을 미쳤을 가능성이 높습니다. 공식 뉴스 부재로 보아 특정 대형 업데이트보다는 **정상적인 주기적 거래 흐름의 회복**으로 해석됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/04/15</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+18.3%</span>
+        </div>
+        <div class="alert-amounts">기준: 36,994,194원 → 당일: 43,765,100원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거상 거래 급등 분석
+
+**전일 거래가 없었던 상태에서 당일 약 4,376만 원의 거래가 발생한 것으로, 공식 뉴스는 없으나 주말(04/15는 월요일 이전)을 앞둔 사용자 활동 증가 또는 정기 업데이트/이벤트 예고가 있었을 가능성이 높습니다.** 또한 새로운 시즌 시작이나 제한된 기간의 특별 이벤트 아이템 출시로 인한 수요 급증도 고려할 수 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/04/17</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+16.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 38,839,237원 → 당일: 45,222,650원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거상 거래 급등 분석
+
+전일 거래가 없다가 당일 약 4,522만 원의 거래가 발생한 것으로 보아, **주말 진입에 따른 플레이어 활동 증가**와 **정기 업데이트나 이벤트 시작**이 거래량 회복의 주요 원인으로 추정됩니다. 또한 특정 아이템이나 장비에 대한 수급 불균형이 일시적으로 형성되었을 가능성도 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">오딘:발할라라이징</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+24.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 25,011,120원 → 당일: 31,172,540원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 오딘:발할라라이징 거래 급등 분석
+
+전일 거래가 전무했던 상황에서 당일 약 3,117만 원의 거래가 발생한 것으로, **주말 효과로 인한 사용자 활동 증가** 또는 **게임 내 정기 이벤트/업데이트 주기**에 따른 일시적 수요 증가로 추정됩니다. 거래 건수 데이터 부재로 정확한 분석에 한계가 있으나, 뉴스 부재를 감안하면 특정 대형 이슈보다는 **일상적인 게임 활동 사이클의 변동**으로 보입니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">오딘:발할라라이징</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+34.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 26,038,023원 → 당일: 34,926,580원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거래 급등 분석
+
+**오딘:발할라라이징**의 04월 7일 거래 급등은 주말 효과로 인한 것으로 추정됩니다. 전일 거래가 없던 상황에서 주말을 맞아 유저들의 아이템 거래 수요가 집중된 것으로 보이며, 특정 주간 이벤트나 시즌 진행 단계에서의 자연스러운 거래량 증가일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">오딘:발할라라이징</span>
+          <span class="alert-date">26/04/17</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+23.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 23,436,686원 → 당일: 29,028,070원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거래 급등 분석
+
+**오딘:발할라라이징**의 04/17 급등은 **주말 효과**와 **정기 이벤트/업데이트 주기**에 따른 것으로 추정됩니다. 전일 거래가 전무했던 상황에서 주말 게이머 활동 증가로 인한 자연스러운 거래량 회복이 주요 원인으로 보이며, 공식 뉴스 부재에도 불구하고 게임 내 주간 이벤트나 보상 시즌 갱신이 함께 작용했을 가능성이 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/04/04</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+46.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 19,950,757원 → 당일: 29,269,160원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 마비노기 거래 급등 분석
+
+전일 거래 기록이 없다가 당일 약 2,926만 원의 거래가 발생한 것으로 보아, **주말 진입으로 인한 일반적인 거래량 증가** 또는 **정기 업데이트/이벤트 시즌 진입**이 주요 원인으로 추정됩니다. 뉴스 보도가 없는 점을 고려하면 **루틴화된 주기적 활동(주말 이벤트, 월간 업데이트 등)에 따른 자연스러운 거래 활성화**일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+26.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 21,395,028원 → 당일: 27,088,640원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 마비노기 거래 급등 분석
+
+**전일 거래가 없었던 상황에서 당일 약 2,700만원의 거래가 발생한 것으로, 뉴스 보도가 없어 정확한 원인 파악은 어렵습니다.** 다만 4월 초 시점에 계절 이벤트나 정기 업데이트, 혹은 게임 내 기간 한정 콘텐츠 추가 등이 거래 수요를 촉발했을 가능성이 있습니다. 거래 건수 데이터 부재로 대량 소수 거래인지 소량 다수 거래인지 판단하기는 어려우므로, 추가 거래 패턴 추적이 필요합니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/04/11</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+16.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 19,452,343원 → 당일: 22,582,420원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 마비노기 거래 급등 분석
+
+전일 거래 기록이 없다가 당일 22,582,420원의 거래가 발생한 것으로, **뉴스 부재로 인해 공식 업데이트나 이벤트보다는 일시적 수요 증가**로 추정됩니다. 4월 중순의 계절 이벤트나 정기 점검 후 복구 거래, 또는 장기간 미거래 상태였던 계정의 재활성화로 인한 일회성 거래일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/04/14</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+15.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 16,768,766원 → 당일: 19,362,280원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 마비노기 거래 급등 분석
+
+**전일 거래가 0원에서 당일 약 1,936만 원으로 급증한 것으로 보아, 정기 업데이트나 신규 콘텐츠 패치가 있었을 가능성이 높습니다.** 마비노기는 주기적인 업데이트를 통해 신규 아이템이나 콘텐츠를 출시하는데, 이때 플레이어들의 거래 수요가 급증하는 패턴을 보입니다. 추가적으로 주말(4월 14일이 토요일)과 맞물려 플레이어 활동이 활발해진 것도 영향을 미쳤을 것으로 예상됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/04/15</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+18.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,901,541원 → 당일: 21,232,630원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 마비노기 거래 급등 분석
+
+전일 거래가 전무했던 상황에서 당일 약 2,123만 원의 거래가 발생한 것으로, **뉴스 부재 시 일반적인 게임 거래 패턴**을 고려하면 **주말 효과(04/15는 일요일)** 또는 **정기 점검 후 복구 시간대**에 의한 수요 증가로 추정됩니다. 마비노기는 오랜 장수 게임으로 정기 유지보수나 소규모 업데이트가 거래를 촉발할 수 있으며, 추가 정보 없이는 **시즌 개시 또는 아이템 개조 시스템 변경** 같은 메타 변화도 가능성이 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/04/16</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+75.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 18,864,389원 → 당일: 33,126,300원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 마비노기 거래 급등 분석
+
+전일 거래가 전무한 상태에서 당일 33백만원대의 거래가 발생하여 급등으로 나타났습니다. 공식 뉴스 부재로 볼 때, **주중(수요일)의 정기 업데이트나 이벤트 시작, 또는 커뮤니티 중심의 제한된 아이템 판매 기간**으로 인한 일시적 거래량 증가로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/04/17</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+64.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 20,975,241원 → 당일: 34,512,520원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 마비노기 거래 급등 분석
+
+전일 거래가 0원에서 당일 34,512,520원으로 급증한 것으로 보아, **주중(수요일)의 정기 업데이트나 신규 아이템 추가**에 따른 거래 수요 증가로 판단됩니다. 관련 뉴스가 없는 점을 고려하면 **정기 메인테넌스 후 복구된 정상 거래 재개** 또는 **시즌/이벤트 관련 한정 아이템의 거래 활성화**가 원인일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">서든어택</span>
+          <span class="alert-date">26/04/10</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+31.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 19,681,369원 → 당일: 25,913,340원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 서든어택 거래 급등 분석
+
+**전일 거래가 없다가 당일 갑자기 약 2,591만 원의 거래가 발생한 것으로 보아, 특정 아이템 판매나 계절 이벤트(시즌 시작 등)에 따른 플레이어의 구매 수요 증가가 원인으로 추정됩니다.** 공식 뉴스가 없는 점을 고려하면 정기적인 업데이트나 주말 효과에 따른 자연스러운 거래량 회복일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">서든어택</span>
+          <span class="alert-date">26/04/18</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+37.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,666,189원 → 당일: 24,289,390원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 서든어택 거래 급등 분석
+
+전일 거래가 0원에서 당일 24,289,390원으로 급증한 것은 **거래 공백 후 정상화**로 보입니다. 04/18이 주말(토요일)에 해당하여 주말 거래량 증가와 함께, 정기 업데이트나 신규 시즌/이벤트 시작이 거래 활성화를 촉발했을 가능성이 높습니다. 관련 뉴스 부재에도 불구하고 게임 내 정기 콘텐츠 운영이 주요 원인으로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/04/05</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+44.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 23,192,452원 → 당일: 33,525,250원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 테일즈위버 거래 급등 분석
+
+전일 거래가 없다가 당일 33,525,250원의 거래가 발생한 것으로 보아, **주말 효과로 인한 게이머의 수급 집중**이 주요 원인으로 추정됩니다. 공식 뉴스는 없으나 **정기 업데이트나 이벤트 시즌과 맞물린 아이템 거래 수요 증가**, 또는 **장기 비활동 유저들의 복귀에 따른 수급 조정**이 함께 작용했을 가능성이 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/04/12</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+40.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,057,499원 → 당일: 24,029,370원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 테일즈위버 거래 급등 분석
+
+전일 거래가 전무한 상태에서 당일 약 2,403만원의 거래가 발생한 것으로, **절대적 거래량은 미미하지만 상대적 급등**입니다. 공식 뉴스 부재로 보아 **정기 업데이트, 이벤트 시즌 변경, 또는 커뮤니티 관심 증가**에 따른 일시적 거래 활성화로 추측됩니다. 추가 확인을 위해 게임사 공지사항이나 플레이어 커뮤니티 동향을 모니터링할 필요가 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/04/15</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+85.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 15,189,367원 → 당일: 28,238,570원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 테일즈위버 거래 급등 분석
+
+전일 거래 실적이 0원에서 당일 28,238,570원으로 급증한 것으로 보아, **신규 업데이트, 제한된 기간 이벤트 시작, 또는 시즌 변경**으로 인한 것으로 추정됩니다. 공식 뉴스 부재에도 불구하고 거래량이 갑자기 발생한 점은 **게임 내 한정 상품 출시나 경매 시스템 개편** 등의 운영 변화가 있었을 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/04/19</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+47.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 16,951,219원 → 당일: 25,018,150원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 테일즈위버 거래 급등 분석
+
+**전일 거래 기록이 없다가 04/19일 약 2,500만원 규모의 거래가 발생한 것으로 보아, 주말 효과 또는 게임 내 이벤트/업데이트 시작에 따른 플레이어의 관심 증가가 원인으로 추정됩니다.** 추가적으로 장기간 거래 공백 이후 재개된 거래라면 특정 아이템 출시나 가격 조정으로 인한 수급 변화가 영향을 미쳤을 가능성이 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">와우:클래식</span>
+          <span class="alert-date">26/04/09</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+16.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,162,660원 → 당일: 19,979,030원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 와우:클래식 거래 급등 분석
+
+전일 거래가 전무했던 상황에서 당일 약 2천만원대의 거래가 발생한 것으로, **주말 또는 시간대별 거래 집중** 현상으로 보입니다. 공식 뉴스가 없는 점을 고려할 때 **특정 던전 레이드 일정, 주간 퀘스트 갱신, 또는 플레이어 커뮤니티 내 거래 활성화** 등이 원인으로 추측됩니다. 건수 데이터 부재로 정확한 판단은 어렵지만, 소수의 대량 거래 또는 다수의 소액 거래 집중 현상일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">와우:클래식</span>
+          <span class="alert-date">26/04/10</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+16.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,235,587원 → 당일: 19,995,260원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 와우:클래식 거래 급등 분석
+
+**전일 거래가 0원에서 당일 약 2천만원으로 급증한 것으로 보아, 신규 아이템 출시, 게임 내 이벤트 개시, 또는 시즌 업데이트 등으로 인한 플레이어 수급 증가가 원인으로 추정됩니다.** 공식 뉴스가 없는 점으로 미루어 커뮤니티 기반의 자체 거래 활성화나 실시간 인게임 이벤트 진행 가능성이 있습니다. 주중 목요일 거래량 패턴 변화도 함께 고려하면, 주말 대비 수요 회복이나 신규 콘텐츠 준비 단계의 플레이어 활동 증가로 볼 수 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">와우:클래식</span>
+          <span class="alert-date">26/04/11</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+19.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 16,972,887원 → 당일: 20,322,670원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 와우:클래식 거래 급등 분석
+
+**전일 거래가 0원에서 당일 약 2,032만원으로 급증한 것으로 보아, 주말 진입에 따른 플레이어 활동 증가와 계절 이벤트 또는 정기 업데이트 주기가 주요 원인으로 판단됩니다.** 특히 관련 공식 뉴스가 없다면 일반적인 주말 거래 활성화 또는 시즌 중반의 자연스러운 수요 증가일 가능성이 높습니다. 추가적으로 길드 활동 재개나 신규 콘텐츠 예고 등 커뮤니티 기반의 소문이 작용했을 수 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">와우:클래식</span>
+          <span class="alert-date">26/04/12</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+26.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,014,700원 → 당일: 21,431,170원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 와우:클래식 거래 급등 분석
+
+전일 거래가 없다가 당일 21,431,170원의 거래량이 발생한 것으로 보아, **신규 거래자 진입 또는 잠재적 수요층의 한 번에 집중된 매매**로 추정됩니다. 뉴스가 없는 점을 고려하면 **정기적인 업데이트, 신규 레이드/던전 시즌 시작, 또는 주말 게임 활동 증가** 등 게임 내 주기적 이벤트가 거래 활성화를 촉발했을 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">와우:클래식</span>
+          <span class="alert-date">26/04/16</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+20.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 19,667,094원 → 당일: 23,741,970원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 와우:클래식 거래 급등 분석
+
+**전일 거래 부재 후 당일 거래 발생**으로 인한 급등으로 보입니다. 04/16이 주말(토요일)에 해당하는 만큼 **주말 플레이어 증가와 거래 활성화**가 주요 원인으로 판단되며, 신규 패치나 시즌 업데이트 등 **게임 내 이벤트 주기와 맞물린 거래 수요 증대**도 고려할 수 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">바람의나라</span>
+          <span class="alert-date">26/04/05</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+51.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 14,547,135원 → 당일: 22,068,380원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거래 급변 분석
+
+**바람의나라**의 거래량 급등은 전일 0원에서 약 2,200만 원으로 급증한 것으로, 공식 뉴스 부재 시 **주말 효과** 또는 **정기 업데이트/이벤트 시즌**이 주요 원인으로 추측됩니다. 특히 04월 5일이 토요일인 점을 고려하면 주말 게임 활동 증대로 인한 아이템 거래 활성화로 보이며, 동시에 게임사의 정기 콘텐츠 업데이트나 한정 이벤트 진행이 있었을 가능성도 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">바람의나라</span>
+          <span class="alert-date">26/04/11</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+39.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 15,627,626원 → 당일: 21,853,640원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 바람의나라 거래 급등 분석
+
+전일 거래가 전무했던 상황에서 당일 약 2,185만 원의 거래가 발생한 것으로, **주말 효과(04/11은 토요일)로 인한 일반 유저들의 거래 활동 재개**가 주요 원인으로 보입니다. 공식 뉴스는 없으나 **정기 업데이트나 계절 이벤트 시작 시점**이거나, 단순히 평일 거래 부진 후 주말 거래량 회복의 자연스러운 패턴일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">바람의나라</span>
+          <span class="alert-date">26/04/12</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+26.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 16,786,943원 → 당일: 21,215,950원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 바람의나라 거래 급등 분석
+
+전일 거래가 전무한 상태에서 당일 약 2,121만 원의 거래가 발생한 것으로, **뉴스 부재 시 주말 효과나 정기 이벤트/업데이트 주기**를 고려할 수 있습니다. 04월 중순의 계절 이벤트나 시즌 업데이트가 있었을 가능성이 높으며, 장시간 거래 부재 상태에서 누적된 수요가 한 번에 터진 것으로 보입니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">바람의나라</span>
+          <span class="alert-date">26/04/18</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+40.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 16,901,587원 → 당일: 23,734,320원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 바람의나라 거래 급등 분석
+
+전일 거래가 0원에서 당일 23,734,320원으로 급증한 것으로 보아, **주말 효과(금토일)에 따른 일반적인 거래량 증가**로 추측됩니다. 공식 뉴스가 없는 점을 감안하면 **정기 이벤트, 신규 시즌 시작, 또는 게임 내 한정 아이템 출시** 등 게임 내부 업데이트가 거래 활성화를 유도했을 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">바람의나라</span>
+          <span class="alert-date">26/04/19</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+53.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,170,256원 → 당일: 26,408,950원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 바람의나라 거래 급등 분석
+
+**전일 거래 실적 부재 후 당일 거래 재개**가 주요 원인으로 보입니다. 공식 뉴스가 없는 점을 고려하면, 정기 유지보수 종료, 주말 플레이 수 증가, 또는 게임 내 제한적 이벤트/아이템 판매 재개로 인한 자연스러운 거래 회복이 가능성 높습니다. 건수 데이터 부재로 정확한 판단에 제약이 있으나, **거래 금액 변동률은 미미(0.54%)하여 대규모 수급 변화보다는 정상적인 거래 활성화**로 해석됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/04/08</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+22.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 12,914,310원 → 당일: 15,855,020원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거래 급등 분석 - 옛날바람
+
+**전일 거래 기록이 없다가 당일 약 1,585만 원의 거래가 발생한 것으로 보아, 게임 복귀 또는 재출시, 신규 업데이트/이벤트 시작 등으로 인한 플레이어 관심 재집중이 주요 원인으로 추정됩니다.** 뉴스 보도가 없는 점을 감안하면 게임 내부 이벤트나 커뮤니티 입소문을 통한 자생적 수요 증가일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/04/09</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+51.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 12,527,617원 → 당일: 19,031,330원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거래 급변 분석
+
+**옛날바람**의 04월 9일 급등은 전일 거래가 없었던 상태에서 약 1,900만 원의 거래가 발생한 것으로, 공식 뉴스 부재로 보아 **주말 효과나 신규 플레이어 유입, 또는 커뮤니티 입소문**에 의한 것으로 추정됩니다. 특히 건수 데이터 부재로 정확한 판단이 어렵지만, **소수의 대량 거래보다는 개별 거래자들의 관심 증가**가 원인일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/04/10</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+95.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 13,408,807원 → 당일: 26,236,000원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 옛날바람 거래 급등 분석
+
+전일 거래가 없던 상태에서 당일 **2,623만원의 거래량이 발생**했으며, 이는 게임의 **재출시, 대규모 업데이트, 또는 유명 스트리머의 플레이 공개** 등으로 인한 갑작스러운 관심 증가로 추정됩니다. 공식 뉴스 부재 시에는 **온라인 커뮤니티 입소문이나 SNS 바이럴**로 인한 거래 활성화 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/04/11</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+57.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 15,447,393원 → 당일: 24,383,600원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 옛날바람 거래 급등 분석
+
+전일 거래가 전무했던 상태에서 당일 약 2,438만 원의 거래가 발생한 것으로 보아, **특정 유저들의 집중 매도 또는 신규 거래자의 진입**으로 인한 일시적 변동으로 추정됩니다. 공식 뉴스가 없다면 **게임 내 이벤트, 시즌 시작, 업데이트 예정 공지** 등으로 인한 사전 수급 변화이거나, **커뮤니티 입소문**으로 인한 소수 관심층의 거래 활성화일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/04/19</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+18.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 12,889,027원 → 당일: 15,284,200원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거래 급변 분석
+
+**옛날바람**의 04/19 급등은 전일 거래가 없다가 당일 처음 거래되면서 발생한 것으로 보입니다. 신규 상장이나 거래 재개 시점일 가능성이 높으며, 뉴스 부재를 감안하면 정기 업데이트나 주말 이벤트 같은 루틴 콘텐츠 추가로 인한 플레이어 유입이 원인으로 추측됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">라그나로크</span>
+          <span class="alert-date">26/04/04</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+68.2%</span>
+        </div>
+        <div class="alert-amounts">기준: 14,889,887원 → 당일: 25,040,680원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 라그나로크 거래 급등 분석
+
+**전일 거래 기록이 없다가 당일 약 2,500만 원의 거래가 발생한 것으로 보아, 특정 아이템 재입고, 계절 이벤트(봄 시즌), 또는 신규 플레이어의 대량 유입이 원인으로 추정됩니다.** 공식 뉴스가 없는 점을 고려하면 정기적인 주말 거래 활성화나 게임 내 숨겨진 이벤트 진행 가능성도 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">라그나로크</span>
+          <span class="alert-date">26/04/12</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+54.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 11,144,886원 → 당일: 17,215,360원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 라그나로크 거래 급등 분석
+
+전일 거래 기록이 없다가 당일 17백만원대의 거래가 발생한 것으로 보아, **새로운 아이템 출시, 제한 이벤트 종료, 또는 정기 업데이트**에 따른 수급 변화가 주요 원인으로 추정됩니다. 공식 뉴스 부재로 볼 때 **게임 내 자동 이벤트나 시즌 전환, 혹은 플레이어 커뮤니티 내 입소문**이 거래 활성화를 촉발했을 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">라그나로크</span>
+          <span class="alert-date">26/04/14</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+35.3%</span>
+        </div>
+        <div class="alert-amounts">기준: 11,159,517원 → 당일: 15,100,030원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 라그나로크 거래 급등 분석
+
+**전일 거래 실적이 0원에서 당일 약 1,510만 원으로 급증한 것으로 보아, 신규 거래자의 진입이나 기존 거래자들의 거래 재개가 주요 원인으로 판단됩니다.** 관련 뉴스가 없는 점을 감안하면 정기 업데이트, 새로운 시즌/이벤트 시작, 또는 주말 거래량 증가 등 게임 내부 활동 주기와 연관된 자연스러운 거래 활성화로 추정됩니다. 추가 변동성 추적을 위해 향후 뉴스 및 이벤트 일정 확인이 필요합니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">라그나로크</span>
+          <span class="alert-date">26/04/16</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+21.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 12,418,571원 → 당일: 15,135,130원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 라그나로크 거래 급등 분석
+
+전일 거래가 전무했던 상황에서 당일 약 1,513만 원의 거래가 발생하며 급등한 것으로 보입니다. 공식 뉴스는 없으나, **4월 중순의 주말 또는 계절 이벤트 시작**, **게임 클라이언트 업데이트나 패치 적용**, **커뮤니티 핫딜 공유 등 비공식 채널의 화제**가 거래 재개의 주요 원인으로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">라그나로크</span>
+          <span class="alert-date">26/04/19</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-up">+29.2%</span>
+        </div>
+        <div class="alert-amounts">기준: 12,787,696원 → 당일: 16,523,920원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 라그나로크 거래 급등 분석
+
+**전일 거래가 없던 상태에서 당일 약 1,652만원의 거래가 발생한 것으로 보아, 주말(04/19는 토요일)을 맞아 유휴 플레이어들의 거래 재개 또는 신규 플레이어의 진입이 있었던 것으로 추정됩니다.** 뉴스 공지가 없는 점을 감안하면 정기적인 주말 수요 증가 또는 계절적 업데이트/이벤트 시즌의 영향일 가능성이 높습니다.</div>
+        
+      </div>
+        </div>
+      </div>
+      <div>
+        <div class="alert-column-title fall">🔻 급락 109건</div>
+        <div class="alert-list">
+
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지클래식</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-15.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 2,013,305,850원 → 당일: 1,701,561,940원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지클래식 거래 분석
+
+**전일 거래 기록이 없어 직접 비교는 어렵지만, 당일 약 17억 원의 거래가 발생한 것으로 보아 주말 또는 월초 리셋 시점의 정상적인 거래 활동으로 판단됩니다.** 공식 뉴스 부재 시 일반적으로 주말 플레이 증가, 월간 이벤트 시작, 또는 정기 유지보수 이후 재개장으로 인한 거래 재개 가능성이 높습니다. 급락 표시는 기준 데이터 부재로 인한 상대적 변동성 표시로 해석되며, **실질적으로는 안정적인 유동성 회복 국면**으로 보입니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지클래식</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-17.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 1,961,348,532원 → 당일: 1,625,664,230원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지클래식 거래 분석
+
+**데이터 해석의 문제가 있습니다.** 전일 거래금액이 0원이었던 상태에서 당일 1,625,664,230원으로 거래가 발생했으므로, 실제로는 **급등에 가까운 변화**입니다. 제시된 -0.1711% 변동률과 데이터가 모순되는 것으로 보입니다.
+
+**추정 원인:** 공식 뉴스가 없다면 주말 거래 활성화, 정기 업데이트 또는 제한된 이벤트 기간 종료 시점의 거래 집중이 가능성 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지클래식</span>
+          <span class="alert-date">26/04/08</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-20.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 1,913,393,631원 → 당일: 1,513,327,280원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지클래식 거래 분석
+
+**전일 거래 부재로 인한 기술적 급락 표시로 보입니다.** 전일 거래금액이 0원이었던 상태에서 당일 1.5억 원대의 거래가 발생했으나, 시스템상 비교 기준이 없어 상대적 낙폭으로 표시된 것으로 추정됩니다. 정기적 업데이트나 주말 수요 변동과 같은 게임 거래의 자연스러운 변동성으로 판단되며, 실제 부정적 신호보다는 **거래량 회복 국면**으로 해석하는 것이 적절합니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지클래식</span>
+          <span class="alert-date">26/04/15</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-19.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 1,623,369,231원 → 당일: 1,307,836,760원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지클래식 거래 분석
+
+**전일 거래 기록 부재로 인한 기술적 변동**으로 보입니다. 전일 거래금액이 0원이었기 때문에 당일 1.3억대의 거래가 발생한 것이 상대적으로 큰 낙폭으로 계산된 것 같습니다. **실제로는 평상시 수요 회복 또는 주중 정상 거래 재개**로 해석되며, 별도의 부정적 뉴스나 업데이트가 없다면 자연스러운 거래량 변동일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">아이온2</span>
+          <span class="alert-date">26/04/13</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-16.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 613,287,097원 → 당일: 510,082,650원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 아이온2 거래 급락 분석
+
+**전일 거래 데이터 부재로 인한 기술적 변동**으로 보입니다. 전일 거래금액이 0원이었던 점을 고려하면, 단순 계산상 급락률이 과장되었을 가능성이 높습니다. **실제로는 04/13(토요일)에 거래가 정상 재개된 것으로 추정되며, 주중 거래 부진 후 주말 회복 패턴이 반영된 것**으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">아이온2</span>
+          <span class="alert-date">26/04/14</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-23.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 617,273,061원 → 당일: 470,744,100원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 아이온2 거래 분석
+
+**급락 원인 추측:**
+
+전일 거래가 0원으로 기록되어 있어 전날 거래 부재 상태에서 당일 470M 규모의 거래가 발생한 것으로, 단순 수치 비교상 급락으로 표시된 것으로 보입니다. 실제로는 **주말(04/14 토요일) 거래 재개** 또는 **신규 이벤트/업데이트 진행**에 따른 게임 내 수급 변화가 영향을 미쳤을 가능성이 높습니다. 공식 뉴스 부재를 고려하면 소규모 패치나 정기 이벤트 진행으로 인한 자연스러운 거래 흐름 변동으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">아이온2</span>
+          <span class="alert-date">26/04/20</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-22.2%</span>
+        </div>
+        <div class="alert-amounts">기준: 533,978,681원 → 당일: 415,355,790원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 아이온2 거래 분석
+
+**급락 원인 추측:**
+
+전일 거래 데이터가 0원으로 기록되어 있어 순수한 변동률 비교가 어렵지만, 당일 415백만 원대의 거래가 발생한 점으로 볼 때 **거래 공백 후 정상화 또는 주중(월요일) 거래량 감소**로 인한 것으로 보입니다. 공식 뉴스 부재 시 **주말 효과 감소, 정기 점검, 또는 게임 내 가격 조정 이벤트 종료** 등이 영향을 미쳤을 가능성이 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-20.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 192,598,114원 → 당일: 152,603,110원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 메이플스토리 거래 분석
+
+**급락 원인 추정:**
+전일 거래 데이터가 0원으로 기록되어 있어 순수한 가격 변동보다는 **거래량 기록 오류 또는 시스템 초기화의 영향**으로 보입니다. 뉴스 부재 시점에 당일 152M원대 거래가 발생한 것으로 보아, **주말 이후 평일 거래 정상화 또는 정기 업데이트 후 수급 불균형**이 일시적 낙세를 유발했을 가능성이 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-30.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 185,932,280원 → 당일: 130,159,080원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 메이플스토리 거래 분석
+
+**급락 원인 분석:**
+전일 거래 기록이 없어 단순 비교는 어렵지만, 4월 7일(수요일) 평일의 거래로 보아 **주말 이후 일상적인 거래량 감소**로 인한 것으로 추측됩니다. 또한 메이플스토리의 정기 업데이트나 특별 이벤트 종료 시점일 가능성이 있으며, 명확한 시장 뉴스 부재는 **외부 이슈보다는 자연스러운 게임 수익성 변동 주기**를 반영하는 것으로 보입니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리</span>
+          <span class="alert-date">26/04/20</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-22.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 207,922,044원 → 당일: 161,970,300원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 메이플스토리 거래 분석
+
+전일 거래 데이터가 0으로 기록되어 있어 정확한 변동률 산정이 어렵지만, **주중 평일(04/20)의 거래 활동 재개**로 보입니다. 공식 뉴스가 없는 점을 감안하면 **정기 점검 후 복구, 주간 이벤트 시작, 또는 신규 콘텐츠 패치** 등으로 인한 자연스러운 거래량 회복으로 추측됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리월드</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-20.3%</span>
+        </div>
+        <div class="alert-amounts">기준: 202,534,175원 → 당일: 161,475,150원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 메이플스토리월드 거래 분석
+
+**급락 원인 분석:**
+
+전일 거래가 없다가 당일 161억원대 거래가 발생한 것으로 보아, **거래 재개에 따른 기술적 조정**으로 추정됩니다. 관련 뉴스가 없는 점을 감안하면, **정기 업데이트나 주간 이벤트 종료** 후 수급 불균형으로 인한 자연스러운 가격 조정일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리월드</span>
+          <span class="alert-date">26/04/08</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-22.2%</span>
+        </div>
+        <div class="alert-amounts">기준: 196,668,600원 → 당일: 152,990,400원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 메이플스토리월드 거래 분석
+
+**데이터 분석 결과:**
+전일 거래 기록이 없는 상태에서 당일 152,990,400원의 거래가 발생했으므로, 절대적인 '급락'이라기보다는 **거래량 복구 또는 재개**로 해석됩니다. 관련 뉴스 부재를 감안하면 **주말(4월 8일이 토요일)의 정기적 거래 활성화** 또는 **누적된 거래 수요의 일시적 반영**으로 추측됩니다. 향후 거래 추이를 지속 모니터링하여 안정성을 확인할 필요가 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-30.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 102,332,684원 → 당일: 70,915,650원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 로스트아크 거래 급락 분석
+
+**주말 거래량 감소와 계절적 침체가 복합적으로 작용한 것으로 추정됩니다.** 04월 초 봄 시즌 전환기에 신규 콘텐츠 업데이트 부재로 플레이어 활동이 저조했으며, 주중 대비 주말의 낮은 거래 수요가 가격 하락을 유발한 것으로 보입니다. 특별한 외부 악재 없이 게임의 자연스러운 생명주기 변동으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-47.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 97,096,512원 → 당일: 51,028,100원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 로스트아크 거래 분석
+
+**전일 거래 기록 부재로 인한 통계적 변동성입니다.** 전일 거래금액이 0원이었던 상황에서 당일 51,028,100원의 거래가 발생했으므로, 절대적 거래량은 증가했으나 계산 방식상 음수 변동률로 표시된 것으로 보입니다. 뉴스 부재를 고려하면 **주말 또는 정기 업데이트 주기의 거래 정상화**로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/04/08</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-17.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 90,515,310원 → 당일: 74,602,140원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 로스트아크 거래 분석
+
+**가능한 원인:**
+전일 거래 기록이 없다가 당일 74.6백만 원 규모의 거래가 발생한 것으로 보아, 주말 또는 특정 이벤트/업데이트 이후 거래 활동이 재개된 것으로 추정됩니다. 다만 금액 변동률이 음수(−0.1758%)를 기록한 것은 거래가 재개되었음에도 불구하고 거래 상품의 평균 가격이 소폭 하락했음을 시사하며, 이는 게임 내 공급 증가나 수요 약세 등의 일반적인 시장 조정 현상일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/04/09</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-18.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 83,688,789원 → 당일: 68,596,500원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 로스트아크 거래 분석
+
+**급락 원인 분석:**
+전일 거래 기록이 없어 단순 비교는 어렵지만, 당일 68M원대의 거래가 발생한 점으로 볼 때 **주말 또는 정기 업데이트 직후의 일시적 수요 조정**으로 추정됩니다. 관련 뉴스 부재로 보아 특정 악재보다는 **통상적인 주간 변동성** 또는 **시즌 중반의 거래량 감소 패턴**일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/04/13</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-26.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 83,644,330원 → 당일: 61,276,650원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 로스트아크 거래 급락 분석
+
+**데이터 해석상 주의:** 전일 거래금액이 0원으로 기록되어 있어 정확한 변동률 비교가 어렵습니다. 다만 당일 61,276,650원의 거래가 발생한 점으로 볼 때, **주중(월-금)의 일반적인 거래 회복 또는 소규모 재정거래로 인한 변동**으로 추정됩니다. 특별한 뉴스가 없으므로 **정기 업데이트 주기나 시즌 구간 전환 시기의 자연스러운 거래량 변화**일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/04/14</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-20.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 82,267,330원 → 당일: 65,258,760원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 로스트아크 거래 급락 분석
+
+**전일 거래가 전무한 상황에서 당일 거래가 발생함에 따라 상대적 낙폭이 크게 나타난 것으로 보입니다.** 주말(04/14)의 일반적인 거래량 감소 패턴이나 게임 내 특별 이벤트 종료, 또는 신규 업데이트 지연으로 인한 플레이어 관심도 저하가 원인일 수 있습니다. **관련 뉴스 부재로 볼 때, 외부 악재보다는 정기적인 주기성 변동 또는 아이템 가격 조정에 따른 자연스러운 거래량 변화로 판단됩니다.**</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/04/15</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-26.3%</span>
+        </div>
+        <div class="alert-amounts">기준: 84,300,281원 → 당일: 62,120,940원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 로스트아크 거래 분석
+
+**급락 원인 추측:**
+
+전일 거래 기록이 없어 직접 비교는 어렵지만, 4월 중순의 거래 재개로 보여집니다. 별도의 뉴스 이슈가 없는 점으로 미루어, 주말(4/15)을 앞둔 플레이어들의 거래 심화 또는 정기 업데이트/이벤트 주기에 따른 자연스러운 거래량 변동으로 추정됩니다. 추가 관심사 없이는 단기 변동성 범위 내의 일반적인 거래 패턴으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/04/16</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-27.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 82,517,253원 → 당일: 59,944,220원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 로스트아크 거래 분석
+
+**급락 원인 분석:**
+
+전일 거래 기록이 없다가 당일 약 6천만 원대의 거래가 발생한 것으로 보아, 단순히 거래량 부재 후 재개된 것으로 판단됩니다. 관련 뉴스가 없는 점을 고려하면 정기 업데이트나 주중 정상 거래 재개로 인한 변동일 가능성이 높으며, 실제 급락보다는 **기준 데이터 부재로 인한 통계적 변동**으로 해석됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/04</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-76.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 90,238,240원 → 당일: 21,559,400원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 급락 분석
+
+**전일 거래 실적이 0원으로 집계되어 수치상 급락으로 표시되었으나, 실제로는 당일 21.5백만 원의 거래가 발생한 것입니다.** 특정 뉴스 없이 급변했다면 주말 이후 평일 거래 정상화, 정기 업데이트 또는 이벤트 종료에 따른 수요 변동, 혹은 거래 데이터 집계 오류의 가능성이 있습니다. **통상적으로 게임 아이템 거래는 신규 콘텐츠 출시 후 1~2주 뒤 안정화되는 패턴을 보이므로, 추가 뉴스 모니터링으로 추세 확인이 필요합니다.**</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-67.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 91,999,610원 → 당일: 29,790,620원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 분석
+
+**전일 거래 데이터 부재로 인한 수치적 왜곡으로 보입니다.** 전일 거래금액이 0원이었던 점을 감안하면, 당일 29.7백만원의 거래가 발생했을 때 비교 대상이 없어 급락으로 표시된 것으로 추정됩니다. 실제로는 **주말 또는 공휴일 이후의 정상적인 거래 회복** 또는 **정기 업데이트나 이벤트**에 따른 거래량 회생 신호로 해석하는 것이 타당합니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/09</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-85.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 98,100,293원 → 당일: 13,999,970원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 분석
+
+**급락 원인 분석:**
+
+전일 거래가 없다가 당일 약 1,400만 원의 거래가 발생했으므로, 실제로는 거래 부재에서 소량 거래로의 변화입니다. 특정 뉴스 없이 거래량이 미미한 수준이라는 점으로 보아, 4월 중순의 비수기 시즌이거나 게임 내 주요 업데이트/이벤트 부재로 인한 자연스러운 거래 침체로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/10</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-15.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 95,171,214원 → 당일: 80,064,860원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 분석
+
+**급락의 가능한 원인:**
+
+전일 거래 기록이 없어 전일 대비 급락으로 표시되었으나, 실제로는 04/10(화요일)에 약 8천만 원대의 정상적인 거래량이 발생한 것으로 보입니다. 뉴스 부재 시점을 고려하면 **주중 일반 거래 흐름이거나 주말 대비 평일의 자연스러운 거래량 감소**로 추정되며, 특별한 업데이트나 이벤트 없이 기본 거래 수준으로 회귀한 것으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/11</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-72.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 95,016,799원 → 당일: 25,889,820원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 급락 분석
+
+**주중 평일의 자연스러운 거래량 감소로 추정됩니다.** 전일 거래가 0원이었던 점으로 보아 주말(04/10)에 집중된 거래가 평일(04/11)로 넘어오면서 수요가 급감한 것으로 보입니다. 특별한 업데이트나 이벤트 뉴스가 없는 상황에서는 주중-주말의 정기적인 거래 변동성이 주요 원인으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/12</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-80.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 95,635,430원 → 당일: 19,134,360원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 급락 분석
+
+데이터상 전일 거래가 0원에서 당일 19,134,360원으로 기록되어 있어, 실제로는 **거래 재개 또는 데이터 복구**로 보입니다. 다만 낮은 거래량을 감안하면 **주중 평일의 일시적 거래 부진** 또는 **게임 점검/유지보수**로 인한 거래 단절이 원인으로 추측됩니다. 관련 뉴스 부재 시 정기 패치나 계절성 이벤트 마무리 시점의 수급 불균형도 가능성이 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/13</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-61.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 74,408,349원 → 당일: 28,759,050원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 분석
+
+**데이터 불일치로 인한 분석 제한**
+
+제공된 데이터에 모순이 있습니다. 전일 거래금액이 0원인 상태에서 당일 28.7백만 원의 거래가 발생했으므로 기술적으로는 급증에 해당하며, -0.6135% 낙폭과 맞지 않습니다. 
+
+**추정 원인**
+- 주말(토요일) 이후 평일 거래량 정상화에 따른 변동
+- 월중 게임 이벤트나 정기 업데이트 전후 수급 조정
+
+정확한 분석을 위해 **전일 데이터의 재확인**이 필요합니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/15</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-50.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 76,966,320원 → 당일: 38,456,330원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 급락 분석
+
+**04/15 거래 급락의 원인:**
+전일 거래 기록이 없었던 상황에서 당일 약 3,845만원의 거래가 발생했으나, 이는 **기준점 부재로 인한 통계적 변동**으로 보입니다. 실제 수급 변화보다는 **주중 거래량 편차** 또는 **정산 주기 차이**에 따른 것으로 추정되며, 관련 이슈가 없는 점을 고려하면 정상적인 시장 변동성 범위 내의 현상으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/16</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-48.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 54,459,714원 → 당일: 27,910,760원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 급락 분석
+
+**04/16 거래 급락의 원인으로는 주말 이후 평일 거래량 감소와 게임 내 특별 이벤트나 업데이트 부재로 인한 플레이어 참여도 하락이 복합적으로 작용한 것으로 보입니다.** 전일 거래 기록이 전무한 점을 감안하면, 신규 데이터 집계 기간의 변경이나 정상적인 거래량 편차일 가능성도 있습니다. 장기적 거래 트렌드 데이터와 함께 검토하면 정확한 원인 파악이 가능할 것으로 예상됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/17</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-65.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 56,446,970원 → 당일: 19,533,290원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 분석
+
+**전일 거래 데이터 부재로 인한 통계적 왜곡으로 보입니다.** 전일 거래금액이 0원이었던 점을 고려하면, 실제 가격 하락보다는 거래 재개에 따른 기술적 변동성으로 해석됩니다. 4월 중순의 일반적인 거래 위축이나 주말 패턴의 영향이 있을 수 있으며, 공식 뉴스 부재로 보아 특정 업데이트나 이벤트보다는 **계절적 수요 감소가 주요 원인**으로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/04/20</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-44.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 59,120,716원 → 당일: 32,756,810원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 리니지M 거래 급락 분석
+
+**데이터 해석의 주의점:**
+제공된 데이터에 모순이 있습니다. 전일 거래금액이 0원인 상태에서 당일 32,756,810원의 거래가 발생했으므로, 실제로는 **급등**에 해당합니다. 음수 변동률은 데이터 오류로 보입니다.
+
+**가능한 원인:**
+전일 거래가 없다가 주중(04/20, 월요일)에 거래가 재개된 것으로 보아, **주말 이후 거래 재개 또는 신규 이벤트/업데이트 공지**에 따른 수요 회복이 원인으로 추측됩니다. 리니지M의 정기적인 주간 업데이트나 이벤트 시작이 거래 활성화를 촉발했을 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">던전앤파이터</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-23.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 86,805,950원 → 당일: 66,372,710원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 던전앤파이터 거래 분석
+
+**급락 원인 추측:**
+
+전일 거래 데이터가 0원으로 기록되어 있어 정확한 변동률 비교가 어렵지만, 당일 66백만 원대의 거래가 발생한 점으로 봐서는 **주말 이후 평일의 거래량 감소** 또는 **월초 잔존 수요 약화**가 원인으로 보입니다. 추가적으로 4월 초는 신규 업데이트나 대규모 이벤트 진행 시점이 아닐 가능성이 높아, **정상적인 수급 조정 과정**으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">던전앤파이터</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-35.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 83,400,410원 → 당일: 53,725,330원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 던전앤파이터 거래 분석
+
+**급락 원인 추정:**
+
+전일 거래 데이터가 0원으로 기록되어 있어 정확한 비교가 어렵지만, 당일 5천만 원대의 거래가 발생한 것으로 보아 **주중 거래 부진** 또는 **시즌/이벤트 종료 후 수요 감소**로 인한 것으로 추측됩니다. 관련 뉴스가 없는 점을 고려하면, 특별한 업데이트나 이벤트 없이 자연스러운 **거래량 감소 패턴**일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">던전앤파이터</span>
+          <span class="alert-date">26/04/08</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-37.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 79,161,113원 → 당일: 49,288,530원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 던전앤파이터 거래 분석
+
+**급락 원인 분석:**
+
+전일 거래가 0원으로 기록되어 있어 전일 대비 수치 비교가 정상적이지 않은 상태입니다. 실제 거래 추이를 파악하기 위해서는 더 장기간의 데이터가 필요하나, 4월 초 시점에서 신규 업데이트나 대규모 이벤트 종료 직후라면 거래 심리 위축으로 인한 자연스러운 조정일 가능성이 있습니다. 관련 공식 뉴스 부재 시 정확한 원인 파악을 위해 게임사 공지사항 확인을 권장합니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">던전앤파이터</span>
+          <span class="alert-date">26/04/09</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-44.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 70,259,456원 → 당일: 38,712,560원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 던전앤파이터 거래 분석
+
+**급락 원인 분석:**
+전일 거래 기록이 0원으로 표시되어 있어 정확한 변동률 비교가 어렵지만, 당일 약 3,870만 원의 거래가 발생했습니다. 특정 뉴스 없이 거래가 발생한 점으로 볼 때, 평일(수요일) 일반적인 게임 아이템 거래 수요와 함께 게임 내 정기 업데이트나 주간 던전 오픈 등 루틴 콘텐츠에 따른 것으로 추측됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">던전앤파이터</span>
+          <span class="alert-date">26/04/13</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-26.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 60,507,861원 → 당일: 44,697,390원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 던전앤파이터 거래 분석
+
+**급락 원인 추정:**
+
+전일 거래 기록이 없어 단순 비교는 어렵지만, 당일 약 4,500만 원의 거래가 발생한 것으로 보아 **주중(일요일)의 일반적인 거래량 감소** 또는 **신규 업데이트/이벤트 종료 후 수급 조정**으로 인한 것으로 추측됩니다. 관련 뉴스 부재로 볼 때 특별한 악재보다는 **자연스러운 주간 거래량 변동**일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">던전앤파이터</span>
+          <span class="alert-date">26/04/16</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-19.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 57,947,799원 → 당일: 46,460,230원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 던전앤파이터 거래 분석
+
+**급락 원인 분석:**
+전일 거래가 0원에서 당일 46백만 원으로 급증했으나 변동률이 음수인 것은 데이터 오류로 보입니다. 실제로는 **주중 거래 재개**로 거래량이 회복된 것으로 추정되며, 4월 중순의 정기 패치나 이벤트 업데이트가 영향을 미쳤을 가능성이 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">바람의전설</span>
+          <span class="alert-date">26/04/05</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-77.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 90,121,500원 → 당일: 20,000,000원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 바람의전설 거래 분석
+
+**급락의 가능한 원인:**
+
+전일 거래 기록이 없는 상태에서 당일 2천만 원의 거래가 발생했으므로, 데이터 집계 오류이거나 거래가 재개된 것으로 보입니다. 뉴스 부재 시 주말 거래량 증가, 정기 업데이트 예정, 또는 시즌 종료 전 수급 변동 등이 가격 변동성을 높였을 가능성이 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">바람의전설</span>
+          <span class="alert-date">26/04/10</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-27.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 96,884,853원 → 당일: 70,000,000원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 바람의전설 거래 급락 분석
+
+데이터에 모순이 있어 정확한 분석이 어렵습니다. 전일 거래가 0원이었는데 당일 7천만원으로 급증한 상황인데, 변동이 음수(-0.2775%)로 표시된 점이 불일치합니다. 
+
+**추측 원인:** 뉴스 부재 시 일반적으로 ①주중 수요 감소(주말 이후 평상시), ②신규 업데이트나 이벤트 종료 후 수급 조정, ③계절 시즌 변화 등이 거래량 변동을 유발할 수 있습니다. 데이터 오류 검토 후 정확한 분석을 권장합니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">26/04/05</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-20.2%</span>
+        </div>
+        <div class="alert-amounts">기준: 80,545,668원 → 당일: 64,309,340원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 패스오브엑자일 거래 분석
+
+**급락의 가능한 원인:**
+
+전일 거래 기록이 없는 상태에서 당일 64백만 원 규모의 거래가 발생했으므로, 단순 전일 대비 비교보다는 **주중~주말 거래량 편차**나 **신규 시즌/패치 업데이트 직후의 가격 조정**으로 인한 변동성으로 보입니다. 추가적으로 대형 업데이트나 이벤트 종료 시점에서 아이템 가격이 급락하는 일반적인 거래 패턴이 적용되었을 가능성이 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-38.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 77,298,402원 → 당일: 47,290,190원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 패스오브엑자일 거래 분석
+
+**급락 원인 추측:**
+
+전일 거래가 0원에서 당일 47M원으로 급증했으나 가격이 하락한 것으로 보아, **신규 시즌/패치 업데이트 직후 아이템 공급 과잉**으로 인한 가격 조정이 원인으로 추정됩니다. 패스오브엑자일의 특성상 정기 시즌 업데이트 시 신규 콘텐츠 진입 유저 증가로 거래량은 폭증하지만, 초기 아이템 난립으로 인한 인플레이션이 동반되는 일반적인 패턴입니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-16.3%</span>
+        </div>
+        <div class="alert-amounts">기준: 72,297,033원 → 당일: 60,494,420원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 패스오브엑자일 거래 급락 분석
+
+**전일 거래가 0원에서 당일 60,494,420원으로 거래량이 발생했으나, 상대적으로 낮은 거래가로 인해 급락으로 표시된 것으로 보입니다.** 4월 7일 평일 기준으로 주말 이후 거래량 정상화 과정이거나, 신규 시즌/패치 출시 후 초기 안정화 단계에서의 가격 조정일 가능성이 있습니다. **뉴스 부재로 보아 특정 악재보다는 자연스러운 시장 수급 변화로 해석됩니다.**</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">26/04/08</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-24.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 70,610,946원 → 당일: 53,023,390원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 패스오브엑자일 거래 분석
+
+**급락 원인 추정:**
+
+전일 거래가 0원에서 당일 53,023,390원으로 거래가 발생했으나, 기준점이 없어 상대적 평가가 어렵습니다. 다만 거래 건수 데이터 부재와 함께 보면, **주중 거래 저조 후 주말 회귀** 또는 **신규 패치/시즌 업데이트 직후 초기 거래 정상화** 과정에서의 변동으로 추측됩니다. 명확한 급락 판단을 위해서는 과거 동기간 평균값과의 비교가 필요합니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">26/04/09</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-36.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 69,727,424원 → 당일: 44,244,970원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 패스오브엑자일 거래 분석
+
+**급락 원인 분석:**
+
+전일 거래 기록이 없다가 당일 44백만 원대의 거래가 발생한 것으로 보아, 실제 급락보다는 **거래 데이터 집계 방식의 변화**로 인한 것으로 추정됩니다. 뉴스 부재를 고려하면 특별한 악재가 아닌 **정기 업데이트나 시즌 전환**, 또는 **주중 일상적인 수급 변동**일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">26/04/10</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-27.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 61,924,887원 → 당일: 44,723,640원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 패스오브엑자일 거래 분석
+
+**급락 원인 추측:**
+
+전일 거래 기록이 없다가 당일 44.7백만 원의 거래가 발생한 것으로 보아, 데이터 집계 오류이거나 특정 대량 거래가 일시적으로 발생한 것으로 추정됩니다. 관련 뉴스가 없는 점을 고려하면 정기 업데이트나 이벤트 종료 시점의 자연스러운 거래량 변동일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">26/04/12</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-17.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 51,894,450원 → 당일: 43,025,350원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 패스오브엑자일 거래 분석
+
+**급락의 주요 원인:**
+
+전일 거래 기록이 없다가 당일 43백만원대의 거래가 발생한 것으로 보아, 데이터 집계 오류이거나 거래 재개 초기 단계로 추정됩니다. 실제 가격 변동률(-0.17%)은 미미하므로 시장 심각도는 낮으며, **주중(금요일) 저유동성 구간에서의 소량 거래 변동** 또는 **신규 시즌/패치 업데이트 후 초기 가격 조정**일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">26/04/13</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-17.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 48,853,880원 → 당일: 40,267,380원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 패스오브엑자일 거래 분석
+
+**전일 거래 기록 부재로 인한 통계적 변동으로 보입니다.** 전일 거래금액이 0원이었던 상태에서 당일 약 4천만 원의 거래가 발생한 것으로, 실질적인 급락이라기보다는 낮은 기저 대비 단순 수치 변동으로 판단됩니다. 별도 공지사항이 없는 점을 고려하면 일상적인 수급 변동 또는 주말 효과에 의한 일시적 거래량 변화로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">26/04/14</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-32.2%</span>
+        </div>
+        <div class="alert-amounts">기준: 47,850,621원 → 당일: 32,416,860원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 패스오브엑자일 거래 분석
+
+**급락 원인 추측:**
+
+전일 거래 기록이 없다가 당일에 32M원대 거래가 발생한 것으로 보아, 데이터 집계 오류이거나 특정 대량 거래자의 일시적 활동으로 인한 변동으로 보입니다. 공식 뉴스 부재와 비교하면 시장 전반의 심각한 변화보다는 **개별 거래자의 포지션 조정이나 주말 거래 패턴 변화**로 해석되며, 지속적인 모니터링이 필요합니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">26/04/16</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-22.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 43,214,799원 → 당일: 33,679,760원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 패스오브엑자일 거래 분석
+
+**급락의 가능한 원인:**
+
+전일 거래 기록이 없다가 당일 33.6백만원 규모의 거래가 발생한 것으로, 이는 신규 업데이트나 시즌 시작 후 초기 수요층의 거래 완료로 인한 일시적 변동으로 보입니다. 뉴스 부재 상황에서는 게임 내 신규 시즌/리그 종료 임박, 가격 조정 예상에 따른 선제 매도 등이 원인일 수 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">26/04/17</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-37.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 41,705,483원 → 당일: 25,955,160원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 패스오브엑자일 거래 분석
+
+**급락 원인 분석:**
+
+전일 거래 기록이 없어 직접 비교는 어렵지만, 당일 약 2,600만원의 거래가 발생한 점으로 볼 때 **주말 또는 신규 시즌/업데이트 직후의 수정 거래로 추정**됩니다. 공식 뉴스 부재 시 일반적인 게임 경제 사이클에서 **초기 거래 과열 후 안정화 단계**로의 자연스러운 조정으로 보여지며, 추가 변동성 요인은 제한적으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">26/04/19</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-41.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 37,117,073원 → 당일: 21,574,420원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 패스오브엑자일 거래 분석
+
+**급락 원인 추측:**
+
+전일 거래 기록이 없다가 당일 21.5M원의 거래가 발생한 것으로 보아, 단순히 거래량이 복구된 것으로 판단됩니다. 급락 표시는 전일 대비 수치 계산 과정에서의 기술적 편차로 보이며, 실질적 악재보다는 **주말 거래 정상화 또는 신규 패치/이벤트 시작에 따른 일반적인 거래 재개**로 해석됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">26/04/20</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-52.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 34,052,654원 → 당일: 16,335,850원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 패스오브엑자일 거래 분석
+
+**전일 거래 기록이 없어 직접적인 비교가 어렵지만**, 당일 약 1,633만 원의 거래가 발생했습니다. 별도의 주요 뉴스나 업데이트 공지가 없는 점으로 보아, **주말(04/20)의 일반적인 수요 감소 또는 시즌 중후반의 자연스러운 거래량 둔화**로 추정됩니다. 정확한 원인 파악을 위해서는 **게임 내 이벤트 일정이나 패치 노트 확인**이 필요합니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-23.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 48,590,490원 → 당일: 36,959,060원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 디아블로2:레저렉션 거래 분석
+
+**급락의 주요 원인:**
+
+전일 거래가 전무(0원)했던 상태에서 당일 36백만원대 거래가 발생한 것으로, 이는 거래 부재 상태에서의 회복이라기보다 **매우 제한적인 거래량**을 나타냅니다. 관련 뉴스 부재 시점이므로 **계절적 수요 감소 또는 플레이어 이탈 시기**일 가능성이 높으며, 4월 초는 신규 콘텐츠/이벤트 공백기로 거래 유동성이 저조한 시즌으로 보입니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">26/04/08</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-26.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 45,819,786원 → 당일: 33,854,680원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 디아블로2:레저렉션 거래 분석
+
+**급락의 주요 원인:**
+
+전일 거래가 전무한 상태에서 당일 33백만 원대 거래가 발생했으므로, 절대적 거래량 부족으로 인한 가격 변동성이 주된 원인으로 보입니다. 관련 뉴스 부재 시 일반적으로 주말 거래 감소, 시즌 종료 임박, 또는 플레이어 이탈로 인한 유동성 저하가 영향을 미쳤을 가능성이 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">26/04/10</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-17.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 42,620,730원 → 당일: 35,087,420원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거래 급락 분석
+
+**디아블로2:레저렉션**의 급락은 다음과 같은 요인으로 추정됩니다:
+
+전일 거래가 없었던 상태에서 당일 35백만원의 거래가 발생했으나, 거래 건수가 0으로 표시된 데이터 불일치로 인해 정확한 분석이 어렵습니다. 다만 주말 이후 평일 거래량 정상화 또는 대량 거래로 인한 가격 조정, 혹은 게임의 장기 인기도 하락으로 인한 거래 심화 현상으로 보입니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">26/04/13</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-25.2%</span>
+        </div>
+        <div class="alert-amounts">기준: 40,237,881원 → 당일: 30,089,000원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 디아블로2:레저렉션 거래 분석
+
+**급락의 가능한 원인:**
+전일 거래 기록이 없다가 당일 갑자기 30M 규모의 거래가 발생한 점으로 보아, **개별 대량 거래나 보유자의 일시적 매도 압박**이 발생한 것으로 추정됩니다. 뉴스나 공식 업데이트가 없는 상황에서는 시즌 변화나 플레이어의 수급 불균형으로 인한 **단순 시장 변동성**일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">26/04/14</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-23.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 39,256,444원 → 당일: 30,227,500원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 디아블로2:레저렉션 거래 분석
+
+**급락의 가능한 원인:**
+
+전일 거래 기록이 없다가 당일 갑자기 30M대의 거래가 발생한 것으로 보아, 이는 실제 급락이라기보다 **거래 공백 후 재개된 정상적인 거래량**으로 해석됩니다. 다만 금액 변동률이 음수인 점을 고려하면, 지난 활발한 거래 시점 대비 **수요 감소 또는 아이템 공급 증가로 인한 가격 하락**이 동반되었을 가능성이 있습니다. 공식 뉴스가 없는 점으로 보아, 정기적인 업데이트나 특정 이벤트보다는 **자연적인 시즌 진행에 따른 시장 포화**가 원인으로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">26/04/15</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-25.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 37,742,231원 → 당일: 28,046,510원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 디아블로2:레저렉션 거래 분석
+
+**분석 결과:**
+전일 거래가 전무했던 상황에서 당일 약 2,800만원의 거래가 발생했으나, 가격 하락률(-0.2569%)을 보이고 있습니다. 이는 금요일(04/15) 주말 진입에 따른 거래 재개와 동시에 매도 물량이 매수 수요를 초과한 것으로 보이며, 공식 뉴스 부재 시 일반적인 주중 거래 저점에서의 자연스러운 가격 조정으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">26/04/16</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-21.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 36,912,493원 → 당일: 29,155,350원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 디아블로2:레저렉션 거래 분석
+
+**거래 급락의 가능한 원인:**
+
+전일 거래가 0원에서 당일 29백만원대로 급증했으나 가격이 하락한 것으로 보아, **주말(토요일) 일반 플레이어들의 대량 매도**로 인한 공급 증가가 주요 원인으로 추정됩니다. 특정 뉴스나 업데이트 없이 순환적인 거래량 변동이 발생한 것으로 보이며, **시즌 중반 수급 불균형**으로 인한 자연스러운 가격 조정으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">26/04/17</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-34.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 35,688,593원 → 당일: 23,221,450원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 디아블로2:레저렉션 거래 분석
+
+**전일 거래 부재로 인한 기술적 급락으로 추정됩니다.** 전일 거래금액이 0원이었던 상태에서 당일 23백만원대의 거래가 발생했으므로, 절대적 수치 변동보다는 기준점 부재로 인한 백분율 왜곡 가능성이 높습니다. 주말(토요일) 거래 재개 또는 정기 이벤트/시즌 업데이트와 관련된 수급 변화가 함께 작용했을 것으로 보입니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">26/04/18</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-18.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 33,993,454원 → 당일: 27,570,960원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 디아블로2:레저렉션 거래 분석
+
+**전일 거래 부재로 인한 기술적 급락으로 추정됩니다.** 전일 거래금액이 0원이었던 상황에서 당일 27.5백만 원의 거래가 발생했으나, 비교 기준이 없어 단순 계산상 음수 변동률이 표시된 것으로 보입니다. 실제로는 거래 재개 신호이며, 주중(월요일)의 점진적 수요 회복이나 소규모 거래자들의 포지션 조정이 주요 원인으로 예상됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-35.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 39,410,440원 → 당일: 25,457,130원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거상 거래 분석
+
+**급락 원인 추측:**
+
+전일 거래 데이터가 0원으로 기록되어 있어 단순 비교 기준의 왜곡으로 보이며, 실제 거래량 변화를 정확히 판단하기 어렵습니다. 다만 4월 초 주중으로 추정되는 시점에서 주말 이후 거래 심화 또는 신규 업데이트/이벤트 종료 후 수요 감소 등이 영향을 미쳤을 가능성이 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-40.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 37,084,888원 → 당일: 21,992,800원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거상 거래 급락 분석
+
+전일 거래 기록이 없어 단순 비교는 어렵지만, 당일 약 2,200만 원의 거래가 발생했습니다. **공식 뉴스 부재로 보아 특별한 업데이트나 이벤트 없이 자연스러운 거래량 변동으로 보이며, 평일(04/7)이라는 점에서 주말 대비 일반적인 거래 감소 패턴일 가능성이 높습니다.** 장기 미접속 유저의 아이템 정리 또는 소규모 시즌 변화에 따른 수급 불균형도 고려해볼 수 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/04/08</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-36.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 34,928,876원 → 당일: 22,090,780원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거상 거래 급락 분석
+
+전일 거래 데이터가 0원으로 기록되어 당일 거래액이 발생한 것 자체가 급락으로 표시된 것으로 보입니다. 관련 뉴스가 없는 점을 감안하면, **주중 평일(4월 8일 월요일)의 낮은 거래량** 또는 **계절적 수요 저하**에 따른 자연스러운 변동으로 추정됩니다. 실제 가치 하락보다는 **거래 통계 기준 변동**일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/04/16</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-23.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 40,090,526원 → 당일: 30,679,150원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거상 거래 급락 분석
+
+04/16은 화요일로, **주중 거래량 감소 시즌**으로 인한 자연스러운 하락으로 보입니다. 전일 거래 기록이 없는 점을 감안하면 **주말 대비 평일의 일반적인 거래 위축**이 주요 원인으로 추정됩니다. 별도의 부정적 뉴스나 대규모 업데이트가 없는 만큼, 게임 플레이어의 활동 패턴 변화에 따른 **정상적인 변동성**으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/04/20</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-22.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 36,088,734원 → 당일: 28,022,600원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거상 거래 분석
+
+**급락 원인 추측:**
+전일 거래 기록이 없어 단순 비교는 어렵지만, 04/20(일요일)이라는 주말 특성상 거래량 자체가 적을 수 있습니다. 공식 뉴스 부재로 보아 특정 업데이트나 이벤트보다는 **자연스러운 주기적 거래 변동** 또는 **시즌 말 수급 조정**으로 인한 가격 하락으로 예상됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">오딘:발할라라이징</span>
+          <span class="alert-date">26/04/08</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-39.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 27,307,817원 → 당일: 16,556,940원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 오딘:발할라라이징 거래 분석
+
+**전일 거래 부재로 인한 통계적 변동으로 보입니다.** 전날 거래가 0건이었던 상황에서 당일 1,655만원의 거래가 발생했으나, 기준점이 없어 변동률 계산상 급락으로 표시된 것으로 추정됩니다. 특정 뉴스나 업데이트가 없는 점을 고려하면, 주말 또는 평일의 자연스러운 거래량 회복 또는 소규모 플레이어들의 아이템 정리 거래로 인한 것으로 예상됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">오딘:발할라라이징</span>
+          <span class="alert-date">26/04/14</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-27.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 26,009,300원 → 당일: 18,799,480원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거래 급락 원인 분석
+
+게임의 **시즌 종료 또는 업데이트 대기 시기**로 추정되며, 플레이어들의 관심 저하로 인한 자연스러운 거래량 감소로 보입니다. 추가적으로 **주중(월요일) 거래의 계절적 저점**과 새로운 콘텐츠 출시 전 **수급 불균형**이 가격 하락을 초래한 것으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">오딘:발할라라이징</span>
+          <span class="alert-date">26/04/16</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-23.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 24,310,349원 → 당일: 18,537,530원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 오딘:발할라라이징 거래 분석
+
+**전일 거래 부재로 인한 기술적 변동성입니다.** 전일 거래금액이 0원인 상태에서 당일 18,537,530원의 거래가 발생했으므로, 낮은 기준값에서의 비율 변동으로 표시된 것으로 보입니다. 실제로는 거래 활동이 재개된 것으로 해석되며, 주중 정상적인 수요 회복이나 게임 내 정기 업데이트/이벤트 진행이 원인일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/04/05</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-19.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 22,280,358원 → 당일: 17,853,710원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 마비노기 거래 분석
+
+**전일 거래 부재로 인한 변동률 산출 오류로 보입니다.** 전일 거래금액이 0원이므로 퍼센트 변동 계산이 정상적으로 작동하지 않았을 가능성이 높습니다. 실제로는 04/5일에 약 1,785만원 규모의 거래가 발생한 것으로, 특별한 뉴스 없이는 주말 거래량 증가나 정기 업데이트/이벤트 주기에 따른 자연스러운 거래 활성화로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-48.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 22,343,963원 → 당일: 11,432,850원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 마비노기 거래 분석
+
+**급락 원인 추측:**
+
+전일 거래가 0원에서 당일 11,432,850원으로 증가했으나 변동률이 음수로 표시된 것은 데이터 산출 방식의 이상으로 보입니다. 실제로는 거래 재개 현상으로 판단되며, 4월 초중순의 정기 업데이트나 이벤트 종료, 또는 주말 거래량 변동에 따른 자연스러운 시장 조정으로 예상됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/04/08</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-30.3%</span>
+        </div>
+        <div class="alert-amounts">기준: 20,785,233원 → 당일: 14,492,700원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 마비노기 거래 분석
+
+**급락 원인 추정:**
+전일 거래가 0원에서 당일 14,492,700원으로 거래량이 증가했음에도 불구하고 급락으로 표기된 것은 **거래 단가가 크게 하락**했음을 의미합니다. 공식 뉴스 부재 시 월요일(4/8)의 주중 낮은 수요, 혹은 신규 아이템 업데이트나 이벤트 보상 아이템 풀량 증가로 인한 **공급 과잉**이 가격 하락의 주요 요인으로 추측됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/04/13</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-38.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 18,959,004원 → 당일: 11,756,970원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 마비노기 거래 분석
+
+**급락 원인 추측:**
+
+전일 거래 기록이 없어 직접 비교는 어렵지만, 당일 약 1,176만원의 거래가 발생한 것으로 보아 **주중 거래량 감소**로 인한 변동성으로 판단됩니다. 공식 뉴스 부재 시 일반적으로 주중(월~금)의 낮은 거래 활동도나 **신규 이벤트/업데이트 부재로 인한 관심 저하**가 원인으로 예상됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/04/20</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-27.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 23,389,080원 → 당일: 17,044,240원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 마비노기 거래 분석
+
+**급락 원인 분석:**
+
+전일 거래가 0원에서 당일 17,044,240원으로 급증했으나 가격이 하락한 것으로 보아, **수요 감소로 인한 공급 과잉 현상**으로 추정됩니다. 주말 이후 평일(04/20)의 게임 활동 감소나 기존 가격대의 아이템 매물 증가가 영향을 미친 것으로 보이며, 공식 뉴스 부재로 보아 **자연적인 시장 수급 변동**일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">서든어택</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-32.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 25,478,154원 → 당일: 17,233,260원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 서든어택 거래 급락 분석
+
+**데이터 불일치로 인한 분석 한계**가 있습니다. 전일 거래금액이 0원인데 당일 17,233,260원으로 기록된 것은 시스템 오류이거나 데이터 리셋으로 보이며, 건수 정보 부재로 정확한 원인 파악이 어렵습니다. 일반적으로는 **시즌 말 거래 수요 감소, 신규 이벤트 부재, 주중 거래량 자연 감소** 등이 원인으로 추측됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">서든어택</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-30.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 24,104,005원 → 당일: 16,837,050원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 서든어택 거래 급락 분석
+
+**데이터 불일치로 인한 분석 한계가 있습니다.** 전일 거래가 0원/0건인 상황에서 당일 16.8M원의 거래가 발생했음에도 "-0.3015%" 낙폭이 표시된 것은 모순적입니다. 뉴스 부재 상황에서는 주중 평일(월요일)로 인한 자연스러운 거래량 감소 또는 시즌/이벤트 종료 후 수요 감소가 원인으로 추정되며, **정확한 분석을 위해서는 장기 거래 데이터 비교가 필요합니다.**</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">서든어택</span>
+          <span class="alert-date">26/04/09</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-29.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 20,859,426원 → 당일: 14,690,540원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 서든어택 거래 분석
+
+**급락 원인 추측:**
+전일 거래가 0원으로 기록된 점을 감안하면, 실제 급락이라기보다는 **거래 공백 후 정상화**되는 과정으로 보입니다. 4월 9일이 평일이라는 점을 고려할 때, 주중 정상 거래 회복으로 인한 수치 변동일 가능성이 높으며, 특정 뉴스나 이벤트 없이는 일시적 거래량 변동으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">서든어택</span>
+          <span class="alert-date">26/04/14</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-38.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 20,292,911원 → 당일: 12,586,090원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 서든어택 거래 분석
+
+**급락 원인 추측:**
+
+전일 거래 기록이 없어 비교 기준이 불명확하지만, 04/14(목요일) 평일 거래임을 고려하면 주말 이후 거래량 감소 패턴으로 보입니다. 별도의 이벤트나 업데이트 뉴스가 없는 점으로 미루어 **계절적 수요 저하 또는 정기적인 평일 거래 위축**이 주요 원인으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">서든어택</span>
+          <span class="alert-date">26/04/15</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-28.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 19,685,631원 → 당일: 14,029,350원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 서든어택 거래 분석
+
+**데이터 불일치로 인한 분석 한계:**
+전일 거래금액이 0원이므로 직접적인 변동률 비교가 어렵습니다. 다만 당일 약 1,400만 원의 거래가 발생한 점으로 볼 때, **주중(화요일)의 일상적 거래 회복** 또는 **정기 이벤트/시즌 업데이트**에 따른 수요 증가**로 추정됩니다. 관련 뉴스 부재를 고려하면 특별한 악재보다는 **게임 커뮤니티의 자연스러운 거래 활동**으로 보입니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">서든어택</span>
+          <span class="alert-date">26/04/17</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-22.2%</span>
+        </div>
+        <div class="alert-amounts">기준: 19,230,244원 → 당일: 14,964,950원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 서든어택 거래 급락 분석
+
+**04/17 거래 급락의 원인:**
+
+전일 거래가 전무한 상태에서 당일 약 1,500만 원대의 거래가 발생했으나, 이는 **기존 거래층의 이탈보다는 거래량 자체가 극소수**인 것으로 보입니다. 공식 뉴스가 없는 점을 고려하면 **주중 평일(수요일)의 낮은 거래 활동**이 주요 원인이며, 신규 콘텐츠나 이벤트 부재 시 게임의 기존 유저층 감소세가 반영된 것으로 추측됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/04/04</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-43.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 26,036,400원 → 당일: 14,660,610원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 테일즈위버 거래 분석
+
+**전일 거래 기록이 없어 전일 대비 비교가 불가능한 상황**입니다. 다만 당일 약 1,466만 원의 거래가 발생한 것으로 보아, 주말 또는 특정 이벤트/업데이트 시점에서 사용자 활동이 증가했을 가능성이 있습니다. 관련 뉴스 부재를 고려하면 **정기적인 주말 거래 증가 또는 게임 내 소규모 이벤트**에 의한 자연스러운 변동으로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-62.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 25,259,012원 → 당일: 9,611,420원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 테일즈위버 거래 분석
+
+**전일 거래 기록 부재로 인한 기술적 변동으로 보입니다.** 전일 거래금액이 0원이었던 상황에서 당일 9.6백만원의 거래가 발생했으나, 변동률 계산 시 분자 값의 미세한 차이로 음수 변동이 표시된 것으로 추정됩니다. 뉴스 부재와 거래량 부족을 감안하면 **게임의 활성도 저하 또는 특정 사용자군의 소규모 거래**일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-23.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 22,651,080원 → 당일: 17,227,480원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 테일즈위버 거래 급락 분석
+
+**전일 거래가 0원에서 당일 17,227,480원으로 발생한 수치이므로, 실질적인 급락이 아닌 거래 재개로 보입니다.** 다만 금액 기준 -0.2394% 하락은 시장 전체적인 침체 또는 주중(평일) 거래량 감소 패턴으로 추정되며, 관련 뉴스 부재 시 정기 점검, 시즌 종료, 또는 자연스러운 유저 이탈에 따른 거래 위축이 원인일 수 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/04/09</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-57.8%</span>
+        </div>
+        <div class="alert-amounts">기준: 21,983,931원 → 당일: 9,271,110원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 테일즈위버 거래 분석
+
+**전일 거래 데이터가 0원으로 기록되어 있어 전날 대비 급락으로 표시된 것으로 보입니다.** 실제로는 거래가 부재했던 날 이후 당일에 9,271,110원의 거래가 발생한 것으로, 거래량 자체는 정상 범위의 변동으로 판단됩니다. 특별한 뉴스나 이벤트가 없는 점을 고려하면, **요일별 거래 패턴 변화(주중/주말 차이) 또는 정기 이벤트/업데이트 주기의 영향**일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/04/10</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-34.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 19,587,501원 → 당일: 12,801,110원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 테일즈위버 거래 급락 분석
+
+**데이터 불일치로 인한 분석 한계가 있습니다.** 전일 거래가 0원/0건이었는데 당일 12.8백만원이 거래되어 기술적으로는 급증이나, 시스템에서 급락으로 표기된 점은 검토가 필요합니다. 공식 뉴스 부재 시, 평일 낮은 거래량, 신규 업데이트 부재, 또는 특정 거래자의 물량 조정 등이 원인으로 추측됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/04/11</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-19.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,174,873원 → 당일: 13,838,990원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 테일즈위버 거래 분석
+
+**전일 거래 데이터 부재로 인한 기술적 변동성입니다.** 전일 거래금액이 0원이었던 점을 감안하면, 실제 급락이 아닌 저점 대비 변동률 계산으로 인한 수치상의 낙폭으로 보입니다. 당일 약 1,384만 원의 거래가 발생했으므로 **오랜 침체 이후 거래 재개 또는 주말 수급 변화** 정도로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/04/14</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-61.2%</span>
+        </div>
+        <div class="alert-amounts">기준: 16,723,444원 → 당일: 6,488,940원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 테일즈위버 거래 분석
+
+**전일 거래 기록이 없는 상태에서 당일 6.4백만 원의 거래가 발생한 것으로, 절대적 거래량 자체는 미미한 수준입니다.** 공식 뉴스가 없는 점을 감안하면, 주말(04/14가 토요일)의 정기적 수급 변동이나 소규모 플레이어 그룹의 일시적 거래 활동으로 추정됩니다. **장기 부진 게임으로 보이는 만큼 시장 관심 자체가 극히 낮은 상태에서의 미미한 변동성으로 해석됩니다.**</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/04/18</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-24.1%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,077,747원 → 당일: 12,953,290원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 테일즈위버 거래 분석
+
+**급락 원인 추측:**
+
+전일 거래가 0원으로 기록된 점을 고려하면, 이는 거래 부재 후 당일 재개되면서 나타난 **기술적 변동**일 가능성이 높습니다. 실질적인 거래량 자체가 매우 제한적(당일 12.9M원)인 만큼, 관련 뉴스 부재 시 **주중 거래 저조 및 수급 불균형**으로 인한 변동으로 보여집니다. 게임의 주목도가 낮거나 거래 관심층이 감소한 상황으로 해석됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/04/20</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-34.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,092,473원 → 당일: 11,275,010원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 테일즈위버 거래 분석
+
+**데이터 해석의 주의점:** 전일 거래 기록이 0원/0건이고 당일에만 거래가 발생한 점으로 볼 때, 실제 급락이라기보다는 **거래 재개 또는 데이터 집계 변화**로 보입니다. 관련 뉴스 부재 상황에서 주말 수요 감소, 정기 점검 후 복구, 또는 장기간 거래 공백 후 거래량 정상화 등의 원인이 추측됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">와우:클래식</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-32.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 19,072,304원 → 당일: 12,834,830원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거래 급변 분석
+
+**와우:클래식**의 급락은 **주간 거래 패턴의 변동**으로 추정됩니다. 전일 거래가 0원에서 당일 12.8백만 원으로 발생한 것은 주중/주말 거래량 편차이거나, 특정 아이템의 시장 공급 증가로 인한 가격 조정일 가능성이 높습니다. 공식 뉴스 부재 시 **계절 시즌 변화나 길드 활동 주기**의 영향도 함께 고려할 필요가 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">와우:클래식</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-15.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 18,032,725원 → 당일: 15,169,320원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 와우:클래식 거래 분석
+
+**급락 원인 분석:**
+
+전일 거래가 전무(0원)했던 상황에서 당일 15,169,320원의 거래가 발생했으므로, 실제로는 **거래 부재 → 소량 거래로의 전환**입니다. 4월 초 시즌 변화나 정기 업데이트 이후 수급 조정 과정에서 발생한 자연스러운 변동성으로 보이며, 관련 뉴스 부재를 감안하면 **시장 참여자의 감소로 인한 낮은 유동성 상태**로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">와우:클래식</span>
+          <span class="alert-date">26/04/08</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-26.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,623,667원 → 당일: 12,939,880원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 와우:클래식 거래 분석
+
+**급락의 가능한 원인:**
+
+전일 거래가 0원으로 기록되어 있어 단순 비교 분석에 제한이 있으나, 당일 약 1,293만원의 거래가 발생한 것으로 보아 거래 재개 시점으로 추정됩니다. 뉴스 부재 상황에서는 주중(월요일)의 낮은 거래 활동성, 또는 신규 패치/업데이트 직후 시장 관망 심화로 인한 거래 위축이 원인으로 예상됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">와우:클래식</span>
+          <span class="alert-date">26/04/19</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-29.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 19,763,066원 → 당일: 13,912,830원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 와우:클래식 거래 변동 분석
+
+**전일 거래 데이터 부재로 인한 기술적 변동으로 보입니다.** 전일 거래금액과 건수가 모두 0원/0건이었던 점을 고려하면, 실질적인 거래 급락보다는 데이터 집계 오류이거나 시스템 점검 후 정상화된 것으로 판단됩니다. 별도의 게임 내 이벤트나 업데이트 뉴스가 없는 점으로 볼 때 **평상시 수요 수준의 회복 거래**로 해석됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">바람의나라</span>
+          <span class="alert-date">26/04/09</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-30.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 15,879,014원 → 당일: 11,028,560원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 바람의나라 거래 급락 분석
+
+**전일 거래 부재로 인한 기술적 변동으로 추정됩니다.** 전일 거래금액이 0원이었던 상태에서 당일 11,028,560원의 거래가 발생했으나, 낮은 거래량으로 인해 변동성이 크게 표현된 것으로 보입니다. 특정 뉴스나 업데이트 공지가 없는 점을 고려하면, 정기 유지보수나 마이너 패치, 또는 소수 거래자들의 포지션 조정이 가격 변동을 야기한 것으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">바람의나라</span>
+          <span class="alert-date">26/04/13</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-23.2%</span>
+        </div>
+        <div class="alert-amounts">기준: 16,665,167원 → 당일: 12,796,690원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 바람의나라 거래 분석
+
+**급락의 주요 원인:**
+
+전일 거래가 0원에서 당일 12.7백만 원으로 급증했으나, 낮은 거래량으로 인한 변동성 확대로 해석됩니다. 특정 뉴스 없이 거래가 재개된 점을 고려하면, **주말 효과(토요일)로 인한 거래자 감소** 또는 **게임 내 이벤트 종료에 따른 수급 불균형**이 원인으로 추측됩니다. 장기적 관심도 하락보다는 일시적 유동성 변화일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">바람의나라</span>
+          <span class="alert-date">26/04/17</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-32.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,416,657원 → 당일: 11,718,500원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 바람의나라 거래 급락 분석
+
+**주말 거래량 감소의 영향으로 보입니다.** 04/17은 금요일로, 주중 거래자들의 포지션 정리와 주말 진입 전 거래 심화로 인한 변동성 확대가 원인으로 추정됩니다. 공식 뉴스 부재 시점에서는 시즌 업데이트 주기나 정기 이벤트 종료 등 게임 내 콘텐츠 변화에 따른 자연스러운 거래량 감소도 함께 고려할 필요가 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-30.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 14,330,194원 → 당일: 9,957,550원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거래 급락 원인 분석
+
+**'옛날바람'**의 급락은 **데이터 기록 오류**로 추정됩니다. 전일 거래가 0원/0건에서 당일 약 1천만 원 규모의 거래가 발생한 것은 증가 현상이나, 변동률 산출 과정에서 분모가 0이 되어 음수값이 표시된 것으로 보입니다. 실제로는 **저평가 게임의 소수 거래자들에 의한 산발적 거래**이거나, **주말 또는 신규 이벤트 시즌**에 따른 소규모 관심 증가로 보이며, 뉴스 부재로 볼 때 **시장 영향력이 매우 제한적**인 상황입니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-35.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 13,601,420원 → 당일: 8,791,650원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 옛날바람 거래 급락 분석
+
+전일 거래 기록이 없다가 당일 8.7백만 원 규모의 거래가 발생했으므로, 절대적인 거래량 감소보다는 **기준점 변동에 따른 기술적 급락**으로 보입니다. 관련 뉴스 부재로 보아 특별한 악재보다는 **주중 일상적인 거래량 변동** 또는 **소규모 플레이어의 일괄 매도** 등 시장 기술적 요인이 영향을 미친 것으로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/04/13</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-19.2%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,184,521원 → 당일: 13,888,820원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 옛날바람 거래 분석
+
+**급락 원인 분석:**
+전일 거래가 전무(0원)했던 상태에서 당일 약 1,388만원의 거래가 발생했으므로, 단순 거래량 부족으로 인한 가격 변동성으로 보입니다. 뉴스 보도가 없는 점을 고려하면 일일 변동성이 큰 소규모 거래 시장의 일반적인 패턴으로 추정되며, 주말 거래 감소나 특정 플레이어의 매도 거래가 주요 원인일 가능성이 높습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/04/15</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-53.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 18,879,889원 → 당일: 8,764,300원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 거래 급변 분석
+
+**옛날바람**의 급락은 데이터 해석에 주의가 필요합니다. 전일 거래가 0원에서 당일 8.7백만원으로 증가했으나, 기준값이 없어 낙폭 수치(-0.5358%)의 신뢰도가 낮습니다. 실제로는 **거래 재개 또는 복구 시도**로 보이며, 뉴스 부재 상황에서 **주말 수요 증가 또는 정기 이벤트/업데이트**로 인한 유동성 회복이 가능성 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/04/16</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-46.5%</span>
+        </div>
+        <div class="alert-amounts">기준: 17,866,929원 → 당일: 9,561,200원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 게임 거래 분석: 옛날바람
+
+**급락 원인 분석:**
+
+전일 거래가 0원에서 당일 9,561,200원으로 거래량이 발생했으나, 기준점이 없어 상대적 가격 하락으로 표시된 것으로 보입니다. 거래 건수 데이터 부재와 관련 뉴스 미존재를 고려하면, 주말(04/16 일요일) 휴장 또는 유휴 기간 이후의 거래 재개로 인한 자연스러운 변동성 또는 소수 거래자의 저가 매도로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/04/17</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-23.3%</span>
+        </div>
+        <div class="alert-amounts">기준: 16,514,053원 → 당일: 12,667,230원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 옛날바람 거래 분석
+
+**급락 원인 분석:**
+
+전일 거래가 전무(0원)한 상태에서 당일 12.6백만 원의 거래가 발생했으나, 상대적으로 낮은 가격대의 거래가 집중되면서 평균 거래가가 하락한 것으로 보입니다. 관련 뉴스 부재로 보아 특정 이벤트나 업데이트보다는 **주말 수요 변화나 정기적인 플레이어 수급 변동**에 따른 자연스러운 가격 조정으로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/04/20</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-34.7%</span>
+        </div>
+        <div class="alert-amounts">기준: 12,781,556원 → 당일: 8,346,950원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 게임 거래 분석: 옛날바람
+
+**분석 결과:**
+전일 거래가 0원에서 당일 8,346,950원으로 급증했으나, 건수 데이터 부재로 정확한 변동성 판단이 어렵습니다. 주말(4월 20일)의 일반적인 거래 활성화 또는 신규 업데이트/이벤트 시작으로 인한 유저 유입이 원인으로 추정되며, 관련 뉴스 부재 시 게임 내 이벤트나 정기 업데이트 일정을 확인할 필요가 있습니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">라그나로크</span>
+          <span class="alert-date">26/04/06</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-24.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 16,965,674원 → 당일: 12,749,180원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 라그나로크 거래 급락 분석
+
+전일 거래가 0원에서 당일 12,749,180원으로 급증했음에도 불구하고 금액 기준 -0.2485% 하락으로 표시된 것은 **데이터 오류이거나 매우 미미한 낙폭**으로 보입니다. 실제로는 전일 거래 부재로 인한 **기술적 변동성**이 크게 작용했을 가능성이 높습니다. 뉴스 부재 상황에서는 주중 거래량 편차, 게임 업데이트 주기, 또는 계절적 플레이어 감소 등 **정상적인 시장 변동**으로 해석하는 것이 합리적입니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">라그나로크</span>
+          <span class="alert-date">26/04/07</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-29.9%</span>
+        </div>
+        <div class="alert-amounts">기준: 16,262,925원 → 당일: 11,395,200원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 라그나로크 거래 분석
+
+**급락 원인 분석:**
+
+전일 거래가 없었던 상태에서 당일 거래가 발생한 것으로 보아, 기준점 부재로 인한 통계적 변동성이 과장되었을 가능성이 높습니다. 특정 뉴스나 업데이트 소식이 없는 점을 고려하면, 정기 점검 후 게임 재개, 주말 거래량 변동, 또는 장기 미거래 후 소량 거래 재개 등 일상적인 거래 패턴의 복귀로 추정됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">라그나로크</span>
+          <span class="alert-date">26/04/08</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-68.0%</span>
+        </div>
+        <div class="alert-amounts">기준: 15,567,536원 → 당일: 4,973,330원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 라그나로크 거래 분석
+
+**거래 급락의 원인:**
+
+전일 거래가 전무(0원)한 상태에서 당일 4,973,330원의 거래가 발생했으므로, 단순히 거래 재개에 따른 기술적 변동으로 보입니다. 뉴스 부재와 건수 데이터 누락을 감안하면, 주중(04/8 월요일 추정) 일상적인 거래 복귀이거나 소규모 플레이어 거래 활동으로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">라그나로크</span>
+          <span class="alert-date">26/04/09</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-37.4%</span>
+        </div>
+        <div class="alert-amounts">기준: 14,483,057원 → 당일: 9,066,130원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 라그나로크 거래 급락 분석
+
+**데이터 불일치로 인한 분석 한계가 있으나**, 전일 거래 기록이 전혀 없다가 당일 9백만 원대 거래가 발생한 것으로 보아 **주말 또는 이벤트 기간의 수급 불균형**으로 추정됩니다. 가격 하락(-0.374%)은 공급 대비 수요 부족이나 **계절 전환기(4월 초) 플레이어들의 거래 심리 위축**에서 비롯된 것으로 보입니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">라그나로크</span>
+          <span class="alert-date">26/04/17</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-16.6%</span>
+        </div>
+        <div class="alert-amounts">기준: 13,285,571원 → 당일: 11,078,390원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 라그나로크 거래 급락 분석
+
+**데이터 불일치로 인한 분석 한계:**
+전일 거래금액이 0원으로 기록되어 정확한 변동률 비교가 어렵습니다. 다만 당일 거래금액 1,100만원 규모 자체는 일반적인 수준이므로, **주중 평일(목요일)의 통상적인 거래량 감소** 또는 **게임 내 이벤트/패치 후 수급 불균형**이 원인으로 추정됩니다. 정확한 분석을 위해 지난 2주간의 거래 추이 데이터 확인이 필요합니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">라그나로크</span>
+          <span class="alert-date">26/04/18</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-purple">7일평균</span>
+          <span class="alert-rate rate-down">-22.3%</span>
+        </div>
+        <div class="alert-amounts">기준: 13,064,147원 → 당일: 10,148,810원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석</div># 라그나로크 거래 급락 분석
+
+**전일 거래가 없던 상태에서 당일 거래량이 발생했으므로, 절대적 거래 규모는 작은 편입니다.** 4월 중순의 시즌 변화나 정기 업데이트 주기, 또는 게임 내 이벤트 종료에 따른 수급 조정이 가격 하락의 주요 원인으로 추정됩니다. 특정 뉴스가 없는 점으로 볼 때 거시적 시장 심리 변화보다는 **게임 내 수급 불균형이나 단순 변동성**으로 보입니다.</div>
+        
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer>자동 생성: 2026-04-22 18:05 | PTS 트렌드 분석 자동화 | itemmania 마케팅팀</footer>
+</body>
+</html>
