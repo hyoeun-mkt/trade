@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게임 거래데이터 분석 — 2026-06</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg: #0d1117; --bg2: #161b22; --bg3: #21262d;
+    --border: #30363d; --text: #e6edf3; --muted: #8b949e;
+    --accent: #58a6ff; --green: #3fb950; --red: #f85149;
+    --yellow: #d29922; --purple: #bc8cff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Noto Sans KR',sans-serif; font-size:14px; line-height:1.6; }
+
+  .header { background:linear-gradient(135deg,#1a2332,#0d1117); border-bottom:1px solid var(--border); padding:28px 40px; display:flex; align-items:center; justify-content:space-between; }
+  .header h1 { font-size:20px; font-weight:700; color:var(--accent); }
+  .header .meta { color:var(--muted); font-size:12px; text-align:right; line-height:1.8; }
+
+  .container { max-width:100%; margin:0 auto; padding:32px 20px; }
+  .section { margin-bottom:40px; }
+  .section-title { font-size:15px; font-weight:700; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
+
+  .badge { display:inline-block; padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+  .badge-red    { background:rgba(248,81,73,.15);  color:var(--red);    border:1px solid rgba(248,81,73,.3); }
+  .badge-blue   { background:rgba(88,166,255,.15); color:var(--accent); border:1px solid rgba(88,166,255,.3); }
+  .badge-yellow { background:rgba(210,153,34,.15); color:var(--yellow); border:1px solid rgba(210,153,34,.3); }
+  .badge-green  { background:rgba(63,185,80,.15);  color:var(--green);  border:1px solid rgba(63,185,80,.3); }
+
+  .summary-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:32px; }
+  .card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:18px 20px; }
+  .card .label { color:var(--muted); font-size:12px; margin-bottom:6px; }
+  .card .value { font-size:28px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+  .card .sub   { color:var(--muted); font-size:11px; margin-top:4px; }
+
+  /* 급등/급락 좌우 분할 */
+  .alert-columns { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .alert-column-title { font-size:14px; font-weight:700; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid; }
+  .alert-column-title.rise { color:var(--red); border-color:var(--red); }
+  .alert-column-title.fall { color:var(--accent); border-color:var(--accent); }
+  .alert-list { display:flex; flex-direction:column; gap:10px; }
+  .alert-item { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:14px 16px; }
+  .alert-item.rise { border-left:3px solid var(--red); }
+  .alert-item.fall { border-left:3px solid var(--accent); }
+  .alert-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+  .alert-game { font-weight:700; font-size:14px; }
+  .alert-date { color:var(--muted); font-size:11px; font-family:'JetBrains Mono',monospace; }
+  .alert-rate { font-weight:700; font-family:'JetBrains Mono',monospace; font-size:13px; }
+  .rate-up { color:var(--red); }
+  .rate-down { color:var(--accent); }
+  .alert-amounts { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
+
+  /* 모바일 최적화 */
+  @media (max-width: 768px) {
+    .alert-columns { grid-template-columns:1fr; }
+    .container { padding:16px 16px; }
+    .header { padding:16px; flex-direction:column; gap:8px; }
+    .summary-cards { grid-template-columns:repeat(2,1fr); gap:8px; }
+    .card { padding:12px; }
+    .card .value { font-size:22px; }
+    .chart-grid { grid-template-columns:1fr; }
+    .table-wrap { font-size:11px; }
+    .alert-game { font-size:13px; }
+  }
+
+  /* AI 버튼 */
+  .btn-ai { display:inline-flex; align-items:center; gap:6px; padding:7px 16px; background:linear-gradient(135deg,#1c2d4f,#162032); border:1px solid rgba(88,166,255,.4); border-radius:6px; color:var(--accent); font-size:13px; font-weight:600; cursor:pointer; font-family:'Noto Sans KR',sans-serif; transition:all .2s; }
+  .btn-ai:hover { background:rgba(88,166,255,.15); border-color:var(--accent); }
+  .btn-ai:disabled { opacity:.5; cursor:not-allowed; }
+  .spinner { display:none; width:12px; height:12px; border:2px solid rgba(88,166,255,.3); border-top-color:var(--accent); border-radius:50%; animation:spin .6s linear infinite; }
+  .btn-ai.loading .spinner { display:inline-block; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  .ai-result { display:none; margin-top:10px; background:var(--bg3); border-radius:6px; padding:12px 16px; font-size:13px; line-height:1.7; border-left:2px solid var(--accent); animation:fadeIn .3s ease; }
+  .ai-result.show { display:block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+  .ai-label { color:var(--accent); font-size:11px; font-weight:700; margin-bottom:6px; letter-spacing:.5px; }
+
+  .news-list { margin-top:10px; }
+  .news-item { font-size:12px; color:var(--muted); padding:5px 0; border-top:1px solid var(--border); }
+  .news-item:first-child { border-top:none; }
+  .news-item a { color:var(--accent); text-decoration:none; }
+  .news-item a:hover { text-decoration:underline; }
+
+  .chart-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(400px,1fr)); gap:14px; }
+  .chart-card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:16px; }
+  .chart-card.alert-game { border-color:rgba(248,81,73,.35); }
+  .chart-title { font-size:13px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .chart-canvas { height:140px !important; }
+
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  thead th { background:var(--bg3); color:var(--muted); padding:9px 12px; text-align:right; font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
+  thead th:first-child, thead th:nth-child(2) { text-align:left; }
+  tbody tr { border-bottom:1px solid var(--border); transition:background .1s; }
+  tbody tr:hover { background:var(--bg3); }
+  tbody td { padding:8px 12px; text-align:right; font-family:'JetBrains Mono',monospace; white-space:nowrap; }
+  tbody td:nth-child(2) { text-align:left; font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:500; }
+  tbody td:first-child { text-align:center; color:var(--muted); }
+  .cell-alert { background:rgba(248,81,73,.08); color:var(--red) !important; font-weight:700; }
+
+  .memo-section { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:20px; }
+  .memo-game { margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+  .memo-game:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .memo-label { font-size:13px; font-weight:700; margin-bottom:6px; }
+  textarea { width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:'Noto Sans KR',sans-serif; font-size:13px; padding:10px 12px; resize:vertical; min-height:60px; outline:none; transition:border-color .2s; }
+  textarea:focus { border-color:var(--accent); }
+  .save-btn { margin-top:14px; padding:9px 22px; background:var(--accent); color:#0d1117; border:none; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer; font-family:'Noto Sans KR',sans-serif; }
+  .save-btn:hover { opacity:.85; }
+  .save-msg { margin-top:6px; font-size:12px; color:var(--green); display:none; }
+
+  footer { text-align:center; color:var(--muted); font-size:11px; padding:20px 40px; border-top:1px solid var(--border); margin-top:40px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div style="color:var(--muted);font-size:12px;margin-bottom:4px;">📊 PTS 거래데이터 분석</div>
+    <h1>게임별 거래현황 리포트 — 2026-06</h1>
+  </div>
+  <div class="meta">
+    자동 생성: 2026-06-01 09:15<br>
+    분석 게임: 0개 &nbsp;|&nbsp; 이상 감지: 0건
+  </div>
+</div>
+
+<div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:0 40px;display:flex;gap:4px;">
+  <a href="https://hyoeun-mkt.github.io/trade/daily_report/" 
+     style="display:inline-block;padding:12px 18px;font-size:13px;font-weight:700;color:var(--accent);border-bottom:2px solid var(--accent);text-decoration:none;">
+    📅 전일 대비
+  </a>
+  <a href="https://hyoeun-mkt.github.io/trade/trend_report/"
+     style="display:inline-block;padding:12px 18px;font-size:13px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;text-decoration:none;">
+    📈 트렌드 분석
+  </a>
+</div>
+
+<div class="container">
+
+  <div class="summary-cards">
+    <div class="card">
+      <div class="label">분석 게임 수</div>
+      <div class="value" style="color:var(--accent)">0</div>
+      <div class="sub">상위 20개</div>
+    </div>
+    <div class="card">
+      <div class="label">이상 감지</div>
+      <div class="value" style="color:var(--red)">0</div>
+      <div class="sub">±15% 기준</div>
+    </div>
+    <div class="card">
+      <div class="label">급등</div>
+      <div class="value" style="color:var(--red)">0</div>
+      <div class="sub">전일比 +15% 초과</div>
+    </div>
+    <div class="card">
+      <div class="label">급락</div>
+      <div class="value" style="color:var(--accent)">0</div>
+      <div class="sub">전일比 -15% 초과</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      ⚠️ 급등/급락 감지
+      <span class="badge badge-red">0건</span>
+      <span style="font-size:13px;color:var(--muted);margin-left:4px;">💡 AI 분석 결과는 Claude AI 및 네이버 뉴스 기반으로 자동 생성된 참고자료이며, 요일 표기 오류가 종종 일어납니다. 양해해 주세요.</span>
+    </div>
+    <div class="alert-columns">
+      <div>
+        <div class="alert-column-title rise">🔺 급등 0건</div>
+        <div class="alert-list">
+<div style="color:var(--muted);padding:16px;text-align:center;font-size:13px;">급등 없음</div>
+        </div>
+      </div>
+      <div>
+        <div class="alert-column-title fall">🔻 급락 0건</div>
+        <div class="alert-list">
+<div style="color:var(--muted);padding:16px;text-align:center;font-size:13px;">급락 없음</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📈 게임별 일자별 거래금액 추이</div>
+    <div class="chart-grid" id="chartGrid"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📋 전체 거래 데이터</div>
+    <div class="table-wrap">
+      <table><thead><tr>
+        <th>순위</th><th>게임명</th>
+</tr></thead><tbody>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📝 이슈 메모</div>
+    <div class="memo-section">
+      <textarea id="memo_main" placeholder="이슈 메모를 입력하세요..." style="min-height:120px"></textarea>
+    </div>
+    <button class="save-btn" onclick="saveMemos()">💾 메모 저장</button>
+    <div class="save-msg" id="saveMsg">✅ 저장되었습니다!</div>
+  </div>
+
+</div>
+<footer>자동 생성: 2026-06-01 09:15 | PTS 거래데이터 분석 자동화 | itemmania 마케팅팀</footer>
+
+<script>
+const chartData  = {};
+const dateLabels = [];
+const alertGames = [];
+const THRESHOLD  = 0.15;
+const YEAR_MONTH = "2026-06";
+
+function fmt(v) {
+  if (v >= 100000000) return (v/100000000).toFixed(1)+'억';
+  if (v >= 10000) return Math.round(v/10000)+'만';
+  return v.toLocaleString();
+}
+
+// 차트
+const grid = document.getElementById('chartGrid');
+Object.entries(chartData).forEach(([game, values], idx) => {
+  const isAlert = alertGames.includes(game);
+  const card = document.createElement('div');
+  card.className = 'chart-card' + (isAlert ? ' alert-game' : '');
+  card.innerHTML = `<div class="chart-title">${game}${isAlert?' <span class="badge badge-red">⚠ 이상</span>':''}</div><canvas class="chart-canvas" id="c${idx}"></canvas>`;
+  grid.appendChild(card);
+
+  const bgColors = values.map((v,i) => {
+    if (!i) return 'rgba(88,166,255,.35)';
+    const r = values[i-1] ? (v-values[i-1])/values[i-1] : 0;
+    return r >= THRESHOLD ? 'rgba(248,81,73,.65)' : r <= -THRESHOLD ? 'rgba(88,166,255,.65)' : 'rgba(63,185,80,.35)';
+  });
+
+  new Chart(document.getElementById('c'+idx), {
+    type:'bar',
+    data:{ labels:dateLabels, datasets:[{ data:values, backgroundColor:bgColors,
+      borderColor:bgColors.map(c=>c.replace(/[\d.]+\)$/,'0.9)')), borderWidth:1, borderRadius:3 }] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)+'원'}} },
+      scales:{ x:{ticks:{color:'#8b949e',font:{size:10}},grid:{color:'rgba(48,54,61,.5)'}},
+                y:{ticks:{color:'#8b949e',font:{size:10},callback:v=>fmt(v)},grid:{color:'rgba(48,54,61,.5)'}} }
+    }
+  });
+});
+
+// 메모 저장
+const MEMO_KEY = 'pts_memo_'+YEAR_MONTH;
+function saveMemos() {
+  const val = document.getElementById('memo_main').value;
+  localStorage.setItem(MEMO_KEY, val);
+  const msg = document.getElementById('saveMsg');
+  msg.style.display='block';
+  setTimeout(()=>msg.style.display='none', 2000);
+}
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem(MEMO_KEY);
+  if (saved) document.getElementById('memo_main').value = saved;
+});
+</script>
+</body>
+</html>
