@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게임 트렌드 분석 — 2026-06</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+  :root {
+    --bg:#0d1117; --bg2:#161b22; --bg3:#21262d;
+    --border:#30363d; --text:#e6edf3; --muted:#8b949e;
+    --accent:#58a6ff; --green:#3fb950; --red:#f85149;
+    --yellow:#d29922; --purple:#bc8cff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Noto Sans KR',sans-serif; font-size:14px; line-height:1.6; }
+  .header { background:linear-gradient(135deg,#1a2332,#0d1117); border-bottom:1px solid var(--border); padding:28px 40px; display:flex; align-items:center; justify-content:space-between; }
+  .header h1 { font-size:20px; font-weight:700; color:var(--purple); }
+  .header .meta { color:var(--muted); font-size:12px; text-align:right; line-height:1.8; }
+  .nav-tabs { background:var(--bg2); border-bottom:1px solid var(--border); padding:0 40px; display:flex; gap:4px; }
+  .nav-tabs a { display:inline-block; padding:12px 18px; font-size:13px; font-weight:600; color:var(--muted); border-bottom:2px solid transparent; text-decoration:none; }
+  .nav-tabs a.active { color:var(--purple); border-color:var(--purple); font-weight:700; }
+  .container { max-width:100%; margin:0 auto; padding:32px 20px; }
+  .section { margin-bottom:40px; }
+
+  /* 탭 */
+  .tab-btns { display:flex; gap:8px; margin-bottom:20px; }
+  .tab-btn {
+    padding:8px 20px; border-radius:6px; font-size:13px; font-weight:700;
+    cursor:pointer; border:1px solid var(--border); background:var(--bg2);
+    color:var(--muted); font-family:'Noto Sans KR',sans-serif; transition:all .2s;
+  }
+  .tab-btn.active { background:var(--purple); color:#0d1117; border-color:var(--purple); }
+  .tab-content { display:none; }
+  .tab-content.show { display:block; }
+
+  .badge { display:inline-block; padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+  .badge-red    { background:rgba(248,81,73,.15);  color:var(--red);    border:1px solid rgba(248,81,73,.3); }
+  .badge-blue   { background:rgba(88,166,255,.15); color:var(--accent); border:1px solid rgba(88,166,255,.3); }
+  .badge-purple { background:rgba(188,140,255,.15);color:var(--purple); border:1px solid rgba(188,140,255,.3); }
+  .badge-yellow { background:rgba(210,153,34,.15); color:var(--yellow); border:1px solid rgba(210,153,34,.3); }
+
+  .summary-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:32px; }
+  .card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:18px 20px; }
+  .card .label { color:var(--muted); font-size:12px; margin-bottom:6px; }
+  .card .value { font-size:28px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+  .card .sub { color:var(--muted); font-size:11px; margin-top:4px; }
+
+  .alert-columns { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .alert-column-title { font-size:14px; font-weight:700; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid; }
+  .alert-column-title.rise { color:var(--red); border-color:var(--red); }
+  .alert-column-title.fall { color:var(--accent); border-color:var(--accent); }
+  .alert-list { display:flex; flex-direction:column; gap:10px; }
+  .alert-item { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:14px 16px; }
+  .alert-item.rise { border-left:3px solid var(--red); }
+  .alert-item.fall { border-left:3px solid var(--accent); }
+  .alert-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+  .alert-game { font-weight:700; font-size:14px; }
+  .alert-date { color:var(--muted); font-size:11px; font-family:'JetBrains Mono',monospace; }
+  .alert-rate { font-weight:700; font-family:'JetBrains Mono',monospace; font-size:13px; }
+  .rate-up { color:var(--red); }
+  .rate-down { color:var(--accent); }
+  .alert-amounts { font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-bottom:8px; }
+  .ai-result { background:var(--bg3); border-radius:6px; padding:10px 14px; font-size:13px; line-height:1.7; border-left:2px solid var(--accent); margin-top:8px; }
+  .ai-label { color:var(--accent); font-size:11px; font-weight:700; margin-bottom:4px; }
+  .news-list { margin-top:8px; }
+  .news-item { font-size:11px; color:var(--muted); padding:4px 0; border-top:1px solid var(--border); }
+  .news-item a { color:var(--accent); text-decoration:none; }
+  .empty { color:var(--muted); padding:16px; text-align:center; font-size:13px; }
+
+  footer { text-align:center; color:var(--muted); font-size:11px; padding:20px 40px; border-top:1px solid var(--border); margin-top:40px; }
+
+  @media (max-width:768px) {
+    .alert-columns { grid-template-columns:1fr; }
+    .container { padding:16px; }
+    .header { padding:16px; flex-direction:column; gap:8px; }
+    .summary-cards { grid-template-columns:repeat(2,1fr); }
+    .nav-tabs { padding:0 16px; }
+    .tab-btns { flex-wrap:wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div style="color:var(--muted);font-size:12px;margin-bottom:4px;">📊 PTS 거래데이터 분석</div>
+    <h1>게임별 트렌드 분석 리포트 — 2026-06</h1>
+  </div>
+  <div class="meta">
+    자동 생성: 2026-06-01 09:15<br>
+    7일이동평균: 0건 &nbsp;|&nbsp; 전월대비: 0건
+  </div>
+</div>
+
+<div class="nav-tabs">
+  <a href="https://hyoeun-mkt.github.io/trade/daily_report/">📅 전일 대비</a>
+  <a href="https://hyoeun-mkt.github.io/trade/trend_report/" class="active">📈 트렌드 분석</a>
+</div>
+
+<div class="container">
+
+  <div class="summary-cards">
+    <div class="card">
+      <div class="label">7일 이동평균 이상</div>
+      <div class="value" style="color:var(--purple)">0</div>
+      <div class="sub">±15% 기준</div>
+    </div>
+    <div class="card">
+      <div class="label">전월 대비 이상</div>
+      <div class="value" style="color:var(--yellow)">0</div>
+      <div class="sub">2026-05 일평균 기준</div>
+    </div>
+    <div class="card">
+      <div class="label">급등 (전체)</div>
+      <div class="value" style="color:var(--red)">0</div>
+      <div class="sub">7일평균+전월대비</div>
+    </div>
+    <div class="card">
+      <div class="label">급락 (전체)</div>
+      <div class="value" style="color:var(--accent)">0</div>
+      <div class="sub">7일평균+전월대비</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="tab-btns" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <button class="tab-btn active" onclick="switchTab('moving')">
+        📊 7일 이동평균 0건
+      </button>
+      <button class="tab-btn" onclick="switchTab('prev')">
+        📅 전월 대비 0건
+      </button>
+      <span style="font-size:13px;color:var(--muted);margin-left:4px;">💡 AI 분석 결과는 Claude AI 및 네이버 뉴스 기반으로 자동 생성된 참고자료이며, 요일 표기 오류가 종종 일어납니다. 양해해 주세요.</span>
+    </div>
+
+    <div class="tab-content show" id="tab-moving">
+      
+    <div class="alert-columns">
+      <div>
+        <div class="alert-column-title rise">🔺 급등 0건</div>
+        <div class="alert-list"><div class="empty">급등 없음</div></div>
+      </div>
+      <div>
+        <div class="alert-column-title fall">🔻 급락 0건</div>
+        <div class="alert-list"><div class="empty">급락 없음</div></div>
+      </div>
+    </div>
+    </div>
+
+    <div class="tab-content" id="tab-prev">
+      
+    <div class="alert-columns">
+      <div>
+        <div class="alert-column-title rise">🔺 급등 0건</div>
+        <div class="alert-list"><div class="empty">급등 없음</div></div>
+      </div>
+      <div>
+        <div class="alert-column-title fall">🔻 급락 0건</div>
+        <div class="alert-list"><div class="empty">급락 없음</div></div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+</div>
+<footer>자동 생성: 2026-06-01 09:15 | PTS 트렌드 분석 자동화 | itemmania 마케팅팀</footer>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('show'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('show');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
