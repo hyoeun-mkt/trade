@@ -7,7 +7,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
-
+ 
   :root {
     --bg: #0d1117; --bg2: #161b22; --bg3: #21262d;
     --border: #30363d; --text: #e6edf3; --muted: #8b949e;
@@ -16,27 +16,27 @@
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:var(--bg); color:var(--text); font-family:'Noto Sans KR',sans-serif; font-size:14px; line-height:1.6; }
-
+ 
   .header { background:linear-gradient(135deg,#1a2332,#0d1117); border-bottom:1px solid var(--border); padding:28px 40px; display:flex; align-items:center; justify-content:space-between; }
   .header h1 { font-size:20px; font-weight:700; color:var(--accent); }
   .header .meta { color:var(--muted); font-size:12px; text-align:right; line-height:1.8; }
-
+ 
   .container { max-width:100%; margin:0 auto; padding:32px 20px; }
   .section { margin-bottom:40px; }
   .section-title { font-size:15px; font-weight:700; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
-
+ 
   .badge { display:inline-block; padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700; font-family:'JetBrains Mono',monospace; }
   .badge-red    { background:rgba(248,81,73,.15);  color:var(--red);    border:1px solid rgba(248,81,73,.3); }
   .badge-blue   { background:rgba(88,166,255,.15); color:var(--accent); border:1px solid rgba(88,166,255,.3); }
   .badge-yellow { background:rgba(210,153,34,.15); color:var(--yellow); border:1px solid rgba(210,153,34,.3); }
   .badge-green  { background:rgba(63,185,80,.15);  color:var(--green);  border:1px solid rgba(63,185,80,.3); }
-
+ 
   .summary-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:32px; }
   .card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:18px 20px; }
   .card .label { color:var(--muted); font-size:12px; margin-bottom:6px; }
   .card .value { font-size:28px; font-weight:700; font-family:'JetBrains Mono',monospace; }
   .card .sub   { color:var(--muted); font-size:11px; margin-top:4px; }
-
+ 
   /* 급등/급락 좌우 분할 */
   .alert-columns { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   .alert-column-title { font-size:14px; font-weight:700; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid; }
@@ -53,7 +53,7 @@
   .rate-up { color:var(--red); }
   .rate-down { color:var(--accent); }
   .alert-amounts { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
-
+ 
   /* 모바일 최적화 */
   @media (max-width: 768px) {
     .alert-columns { grid-template-columns:1fr; }
@@ -66,7 +66,7 @@
     .table-wrap { font-size:11px; }
     .alert-game { font-size:13px; }
   }
-
+ 
   /* AI 버튼 */
   .btn-ai { display:inline-flex; align-items:center; gap:6px; padding:7px 16px; background:linear-gradient(135deg,#1c2d4f,#162032); border:1px solid rgba(88,166,255,.4); border-radius:6px; color:var(--accent); font-size:13px; font-weight:600; cursor:pointer; font-family:'Noto Sans KR',sans-serif; transition:all .2s; }
   .btn-ai:hover { background:rgba(88,166,255,.15); border-color:var(--accent); }
@@ -74,24 +74,24 @@
   .spinner { display:none; width:12px; height:12px; border:2px solid rgba(88,166,255,.3); border-top-color:var(--accent); border-radius:50%; animation:spin .6s linear infinite; }
   .btn-ai.loading .spinner { display:inline-block; }
   @keyframes spin { to { transform:rotate(360deg); } }
-
+ 
   .ai-result { display:none; margin-top:10px; background:var(--bg3); border-radius:6px; padding:12px 16px; font-size:13px; line-height:1.7; border-left:2px solid var(--accent); animation:fadeIn .3s ease; }
   .ai-result.show { display:block; }
   @keyframes fadeIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
   .ai-label { color:var(--accent); font-size:11px; font-weight:700; margin-bottom:6px; letter-spacing:.5px; }
-
+ 
   .news-list { margin-top:10px; }
   .news-item { font-size:12px; color:var(--muted); padding:5px 0; border-top:1px solid var(--border); }
   .news-item:first-child { border-top:none; }
   .news-item a { color:var(--accent); text-decoration:none; }
   .news-item a:hover { text-decoration:underline; }
-
+ 
   .chart-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(400px,1fr)); gap:14px; }
   .chart-card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:16px; }
   .chart-card.alert-game { border-color:rgba(248,81,73,.35); }
   .chart-title { font-size:13px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
   .chart-canvas { height:140px !important; }
-
+ 
   .table-wrap { overflow-x:auto; }
   table { width:100%; border-collapse:collapse; font-size:12px; }
   thead th { background:var(--bg3); color:var(--muted); padding:9px 12px; text-align:right; font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
@@ -102,7 +102,7 @@
   tbody td:nth-child(2) { text-align:left; font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:500; }
   tbody td:first-child { text-align:center; color:var(--muted); }
   .cell-alert { background:rgba(248,81,73,.08); color:var(--red) !important; font-weight:700; }
-
+ 
   .memo-section { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:20px; }
   .memo-game { margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid var(--border); }
   .memo-game:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
@@ -112,23 +112,23 @@
   .save-btn { margin-top:14px; padding:9px 22px; background:var(--accent); color:#0d1117; border:none; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer; font-family:'Noto Sans KR',sans-serif; }
   .save-btn:hover { opacity:.85; }
   .save-msg { margin-top:6px; font-size:12px; color:var(--green); display:none; }
-
+ 
   footer { text-align:center; color:var(--muted); font-size:11px; padding:20px 40px; border-top:1px solid var(--border); margin-top:40px; }
 </style>
 </head>
 <body>
-
+ 
 <div class="header">
   <div>
     <div style="color:var(--muted);font-size:12px;margin-bottom:4px;">📊 PTS 거래데이터 분석</div>
     <h1>게임별 거래현황 리포트 — 2026-06</h1>
   </div>
   <div class="meta">
-    자동 생성: 2026-06-01 09:15<br>
-    분석 게임: 0개 &nbsp;|&nbsp; 이상 감지: 0건
+    자동 생성: 2026-06-04 09:17<br>
+    분석 게임: 20개 &nbsp;|&nbsp; 이상 감지: 33건
   </div>
 </div>
-
+ 
 <div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:0 40px;display:flex;gap:4px;">
   <a href="https://hyoeun-mkt.github.io/trade/daily_report/" 
      style="display:inline-block;padding:12px 18px;font-size:13px;font-weight:700;color:var(--accent);border-bottom:2px solid var(--accent);text-decoration:none;">
@@ -139,69 +139,648 @@
     📈 트렌드 분석
   </a>
 </div>
-
+ 
 <div class="container">
-
+ 
   <div class="summary-cards">
     <div class="card">
       <div class="label">분석 게임 수</div>
-      <div class="value" style="color:var(--accent)">0</div>
+      <div class="value" style="color:var(--accent)">20</div>
       <div class="sub">상위 20개</div>
     </div>
     <div class="card">
       <div class="label">이상 감지</div>
-      <div class="value" style="color:var(--red)">0</div>
+      <div class="value" style="color:var(--red)">33</div>
       <div class="sub">±15% 기준</div>
     </div>
     <div class="card">
       <div class="label">급등</div>
-      <div class="value" style="color:var(--red)">0</div>
+      <div class="value" style="color:var(--red)">16</div>
       <div class="sub">전일比 +15% 초과</div>
     </div>
     <div class="card">
       <div class="label">급락</div>
-      <div class="value" style="color:var(--accent)">0</div>
+      <div class="value" style="color:var(--accent)">17</div>
       <div class="sub">전일比 -15% 초과</div>
     </div>
   </div>
-
+ 
   <div class="section">
     <div class="section-title">
       ⚠️ 급등/급락 감지
-      <span class="badge badge-red">0건</span>
+      <span class="badge badge-red">33건</span>
       <span style="font-size:13px;color:var(--muted);margin-left:4px;">💡 AI 분석 결과는 Claude AI 및 네이버 뉴스 기반으로 자동 생성된 참고자료이며, 요일 표기 오류가 종종 일어납니다. 양해해 주세요.</span>
     </div>
     <div class="alert-columns">
       <div>
-        <div class="alert-column-title rise">🔺 급등 0건</div>
+        <div class="alert-column-title rise">🔺 급등 16건</div>
         <div class="alert-list">
-<div style="color:var(--muted);padding:16px;text-align:center;font-size:13px;">급등 없음</div>
+
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">던전앤파이터</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +53.8% / 건수 +45.6%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 71,428,880원</span>
+          <span>→</span>
+          <span>당일 금액: 109,890,600원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 던전앤파이터 거래 급등 분석
+
+<strong>06/02의 급락 후 06/03의 반등으로 보이는 변동</strong>으로, 전날 낙폭의 부분적 회복 현상으로 판단됩니다. 수요일 오후~저녁 시간대 거래량 집중이나 주간 보상(던전 쿠폰, 이벤트 아이템) 지급과 같은 <strong>정기적 게임 내 보상 사이클</strong>이 거래 증가를 견인했을 가능성이 높습니다. 또한 주중 중반 사용자 활동이 증가하는 일반적인 패턴과도 부합하며, <strong>특정 던전 이벤트나 제한 시간 이벤트 마감</strong> 등이 추가 수요를 만들었을 수 있습니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">오딘:발할라라이징</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +43.2% / 건수 +9.1%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 44,701,440원</span>
+          <span>→</span>
+          <span>당일 금액: 64,027,340원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 오딘:발할라라이징 거래 급등 분석
+
+<strong>수요일 43.2% 급등의 원인:</strong>
+
+3일 연속 상승세(32→44→64백만 원)를 보이는 것으로 보아, <strong>주중 업데이트나 신규 컨텐츠 출시, 또는 시즌 시작 같은 게임 내 주요 이벤트</strong>가 발생했을 가능성이 높습니다. 건수 증가(9.1%)보다 금액 증가(43.2%)가 훨씬 크다는 점에서 <strong>고가 아이템 거래 수요 집중</strong> 또는 <strong>기간 한정 이벤트로 인한 강화 수요</strong> 증가로 추정됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +37.4% / 건수 +4.0%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 40,350,520원</span>
+          <span>→</span>
+          <span>당일 금액: 55,457,980원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 옛날바람 거래 급등 분석
+
+<strong>거래금액 37.4% 급등의 주요 원인:</strong>
+
+수요일의 급격한 거래량 증가는 주중 플레이어 활동 증가, 주말을 앞둔 선제 거래 수요, 또는 게임 내 정기 이벤트/주간 업데이트 실시로 인한 것으로 추정됩니다. 거래 건수 증가폭(4.0%)이 금액 증가폭(37.4%)에 비해 상대적으로 낮은 점을 고려하면, <strong>고가 아이템의 대량 거래</strong>가 주된 원인으로 보이며, 이는 계획된 플레이어 활동보다는 시장 심리 변화에 의한 것일 가능성이 높습니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +26.9% / 건수 +60.3%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 56,900,000원</span>
+          <span>→</span>
+          <span>당일 금액: 72,207,760원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 거상 거래 급등 분석
+
+<strong>수요일 급등의 주요 원인:</strong>
+
+3일 연속 상승세를 보이며 점진적 증가 추세를 이어가고 있으며, 공식 뉴스 부재에도 불구하고 거래량이 60% 이상 증가한 점으로 볼 때 <strong>게임 내 신규 콘텐츠 업데이트나 기간 한정 이벤트 시작</strong>의 가능성이 높습니다. 추가로 <strong>주중 거래 심리 반등</strong> 또는 <strong>플레이어들의 아이템 수급 수요 증가</strong>도 영향을 미친 것으로 추정됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +19.9% / 건수 +25.2%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 79,130,620원</span>
+          <span>→</span>
+          <span>당일 금액: 94,914,420원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 디아블로2:레저렉션 거래 급등 분석
+
+06/02(화)의 급락 후 06/03(수)에 반등한 것으로 보아, <strong>주중 거래량 변동의 정상적인 복귀</strong> 가능성이 높습니다. 공식 뉴스가 없는 점을 감안하면, <strong>주중 중반(수요일)의 통상적인 거래 회복</strong>이거나 <strong>주간 정기 이벤트/업데이트 준비 시즌</strong>으로 인한 수요 증가로 추정됩니다. 다만 3일 추이 상 06/01의 고점(107M)보다는 낮은 수준이므로, 일시적 변동성 재조정 단계로 판단됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">아이온2</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +18.9% / 건수 +25.5%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 584,248,900원</span>
+          <span>→</span>
+          <span>당일 금액: 694,834,320원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 아이온2 거래 급등 분석
+
+<strong>6월 3일(수요일) 급등의 원인:</strong>
+
+전일 대비 금액 18.9%, 건수 25.5%의 급등이 감지되었으며, 이는 6월 1일의 높은 거래량에서 2일 하락 후 다시 회복하는 패턴입니다. 공식 뉴스 부재 상황에서 볼 때, <strong>주간 중반 이벤트 진행</strong>, <strong>신규 업데이트 또는 시즌 변경</strong>, 혹은 <strong>커뮤니티 이슈/루머로 인한 거래심화</strong> 등이 원인으로 추정됩니다. 거래 건수가 금액보다 더 큰 폭(25.5% vs 18.9%)으로 증가한 점은 소액 거래자들의 참여 증가를 시사하며, 일시적 관심도 상승으로 보입니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +18.1% / 건수 +23.9%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 55,647,620원</span>
+          <span>→</span>
+          <span>당일 금액: 65,746,920원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 마비노기 거래 급등 분석
+
+<strong>06/03 수요일의 18.1% 금액 상승과 23.9% 건수 증가는 전날 하락세에서의 반등</strong>으로 보입니다. 3일 추이를 보면 금요일(06/01) 수준으로 회복된 것으로, <strong>주중 수요일 저녁의 일반적인 거래량 증가나 주말 대비 수요 선회</strong> 가능성이 높습니다. 공식 뉴스가 없는 점을 감안하면 <strong>정기 업데이트, 이벤트 진행 중 또는 급여일 인근의 자연스러운 거래량 증가</strong>로 추정됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">바람의나라클래식</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +17.4% / 건수 +24.0%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 37,962,020원</span>
+          <span>→</span>
+          <span>당일 금액: 44,581,180원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 바람의나라클래식 거래 급등 분석
+
+<strong>지속적인 상승 추세를 보이는 자연스러운 증가로 판단됩니다.</strong> 3일 연속 상승 패턴(26.2M → 37.9M → 44.5M)을 고려할 때, 특정 외부 뉴스보다는 주중 거래 활성화, 정기 업데이트나 시즌 이벤트의 일반적인 수요 증가가 원인으로 추정됩니다. 건수 증가율(24%)이 금액 증가율(17.4%)보다 높다는 점은 소액 거래 참여층의 확대를 시사하며, 게임 내 특정 아이템이나 콘텐츠에 대한 대중적 관심이 높아진 것으로 보입니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">월드오브워크래프트:클래식</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +16.3% / 건수 +20.0%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 33,519,780원</span>
+          <span>→</span>
+          <span>당일 금액: 38,981,260원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 월드오브워크래프트:클래식 거래 분석
+
+<strong>급등 원인 분석:</strong>
+
+06/01에서 06/02로 약 35% 급락한 후 06/03에 반등한 것으로 보아, 주중 거래량 회복의 자연스러운 패턴으로 판단됩니다. 수요일 거래 활성화와 함께 게임 내 주간 던전/레이드 일정(보통 수요일 리셋) 또는 주중 플레이어 활동 증가가 영향을 미친 것으로 추측됩니다. 다만 전일 대비 16.3% 상승이 의미 있는 변동인 만큼, 신규 콘텐츠 패치 또는 제한된 시간의 이벤트 진행 가능성도 고려할 필요가 있습니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일2</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +8.7% / 건수 +19.9%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 193,382,540원</span>
+          <span>→</span>
+          <span>당일 금액: 210,235,320원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 패스오브엑자일2 거래 급등 분석
+
+<strong>3일 연속 상승세를 보이는 점과 수요일 거래량 증가를 고려하면, 주말을 앞둔 사전 거래 수요 증가 또는 게임 내 신규 시즌/이벤트 시작 임박으로 인한 아이템 수급 심화가 원인으로 추정됩니다.</strong> 특별 공지가 없는 점으로 보아, 정기적인 주간 패턴이나 커뮤니티 내 루머 기반의 선제 거래 활동일 가능성이 높습니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +96.5% / 건수 +-58.4%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 200,742,920원</span>
+          <span>→</span>
+          <span>당일 금액: 394,522,780원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 리니지M 거래 급변 분석
+
+<strong>거래금액은 96.5% 급등했으나 거래 건수는 58.4% 급감한 점으로 볼 때, 소수의 대규모 거래자들이 고액의 아이템을 집중 매매한 것으로 추정됩니다.</strong> 화요일이라는 시점상 주중 업데이트나 신규 콘텐츠 출시 후 고가 아이템 수급이 집중된 것이거나, 대규모 길드 활동이나 시즌 변화로 인한 아이템 재편성이 발생했을 가능성이 높습니다. 이는 일시적 거래 왜곡으로 보이며, 다음날 거래 패턴 추이 확인이 필요합니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +46.2% / 건수 +-20.2%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 632,121,660원</span>
+          <span>→</span>
+          <span>당일 금액: 924,044,840원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 메이플스토리 거래 급등 분석
+
+<strong>거래금액 46.2% 급등</strong>은 화요일이라는 요일 특성과 게임 내 주간 이벤트/업데이트 시즌과 연관된 것으로 보입니다. 다만 거래 건수가 20.2% 감소한 점은 소수의 대액 거래가 전체 금액을 견인했음을 시사하며, 특정 아이템의 가격 급등이나 한정 판매 상품에 대한 수요 집중이 원인일 가능성이 높습니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">바람의나라클래식</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +44.7% / 건수 +-18.0%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 26,237,340원</span>
+          <span>→</span>
+          <span>당일 금액: 37,962,020원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 바람의나라클래식 거래 급등 분석
+
+<strong>금액 44.7% 급등에 비해 거래 건수가 18% 감소한 점으로 보아, 소수의 대규모 거래자들에 의한 집중 매매가 발생한 것으로 추정됩니다.</strong> 화요일 기준 주말(6/1-6/2 사이) 이벤트 종료 또는 신규 업데이트/시즌 시작 예정으로 인한 선제 거래 수요 증가가 원인으로 보입니다. 건수 감소 추세를 감안하면 가격 상승에 따른 개인 거래자들의 관망세도 함께 작용한 것으로 판단됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">오딘:발할라라이징</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +39.1% / 건수 +32.6%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 32,137,140원</span>
+          <span>→</span>
+          <span>당일 금액: 44,701,440원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 오딘:발할라라이징 거래 급등 분석
+
+<strong>화요일 급등의 원인:</strong>
+
+공식 뉴스는 없으나, 화요일은 게임 업데이트나 신규 이벤트 시작일이 많은 정기 패치 날짜로 보입니다. 전일 대비 금액 39.1%, 건수 32.6%의 동반 상승은 신규 컨텐츠 출시에 따른 유저 수요 증가를 시사합니다. 주중 거래량 급증이 지속되는지 추적하면 정확한 원인(패치, 이벤트, 시즌 시작 등)을 판단할 수 있을 것으로 예상됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +27.5% / 건수 +-28.4%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 44,630,900원</span>
+          <span>→</span>
+          <span>당일 금액: 56,900,000원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 거상 거래 급등 분석
+
+<strong>거래금액은 27.5% 급등했으나 거래 건수는 28.4% 감소</strong>한 것으로 보아, 소수의 고액 거래자들이 대량 매입한 것으로 추정됩니다. 공식 뉴스 부재 시 <strong>화요일 정기 업데이트나 주말 이벤트 종료 후 시세 상승에 따른 고가 아이템 거래 증가</strong>가 원인일 가능성이 높습니다. 앞으로 거래 건수 회복 추이를 모니터링하여 지속적인 거래 활황인지 단기 변동인지 판단할 필요가 있습니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일2</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +17.0% / 건수 +12.1%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 165,294,380원</span>
+          <span>→</span>
+          <span>당일 금액: 193,382,540원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 패스오브엑자일2 거래 급등 분석
+
+<strong>화요일의 17% 거래액 증가는 주중 정기 업데이트나 신규 시즌/콘텐츠 출시와 관련된 것으로 추정됩니다.</strong> 거래 건수도 12.1% 동반 상승했으며, 공식 뉴스 부재에도 불구하고 금액 증가폭이 건수 증가폭을 상회하는 것으로 보아 고가 아이템 거래가 활성화된 것으로 보입니다. 게임사의 정기 점검 후 신규 콘텐츠나 밸런스 패치 적용이 일반적인 원인일 가능성이 높습니다.</div></div>
+        
+      </div>
         </div>
       </div>
       <div>
-        <div class="alert-column-title fall">🔻 급락 0건</div>
+        <div class="alert-column-title fall">🔻 급락 17건</div>
         <div class="alert-list">
-<div style="color:var(--muted);padding:16px;text-align:center;font-size:13px;">급락 없음</div>
+
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">삼국지전략판</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">-53.6%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 35,800,000원</span>
+          <span>→</span>
+          <span>당일 금액: 16,600,000원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 삼국지전략판 거래 급락 분석
+
+<strong>원인 분석:</strong>
+3일 연속 하락세(46.4백만→35.8백만→16.6백만원)를 보이는 것으로 보아, 수요일 정기 업데이트나 밸런스 패치로 인한 게임 환경 변화가 주요 원인으로 추정됩니다. 거래 건수는 유지되었으나 금액이 급감한 것은 고가 아이템 거래가 감소하고 저가 거래로 쏠린 것을 시사합니다. 주말(06/01)의 높은 거래량에서 평일로의 자연스러운 회귀이면서도 낙폭이 크므로, 게임 내 경제 변동이나 신규 시스템 도입으로 인한 일시적 심리 위축 가능성이 있습니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -40.0% / 건수 -3.7%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 38,417,160원</span>
+          <span>→</span>
+          <span>당일 금액: 23,045,380원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 테일즈위버 거래 급락 분석
+
+<strong>3일 연속 하락세의 주요 원인:</strong>
+
+06/01부터 지속적인 하락 추세를 보이고 있으며, 특히 06/03(수요일) 급락은 <strong>주중 거래량 감소의 자연스러운 연장선</strong>으로 보입니다. 공식 뉴스가 없는 점을 고려하면, <strong>정기 업데이트나 이벤트 종료 후 수요 감소</strong> 또는 <strong>월초 활동의 자연스러운 둔화</strong>가 주요 요인으로 추정됩니다. 건수 변동이 -3.7%로 미미한 반면 금액이 -40%대 급락한 점은 <strong>고가 아이템 거래 부재</strong> 또는 <strong>시장 심리 위축</strong>을 시사합니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">바람의나라</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -39.3% / 건수 -15.6%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 46,837,700원</span>
+          <span>→</span>
+          <span>당일 금액: 28,419,660원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 바람의나라 거래 급락 분석
+
+<strong>06/03 수요일 거래금액이 전일 대비 39.3% 급락했으며, 3일 연속 하락세를 보이고 있습니다.</strong> 관련 뉴스가 없는 점을 고려하면, 주중 거래 저조 현상이나 게임 내 이벤트/패치 종료로 인한 수급 감소가 주요 원인으로 추정됩니다. <strong>또한 금액 낙폭(39.3%)이 건수 낙폭(15.6%)보다 크다는 점은 고가 아이템 거래 감소를 시사하므로, 사용자들의 거래 심리 위축이 복합적으로 작용했을 가능성이 높습니다.</strong></div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -33.2% / 건수 -20.0%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 31,077,320원</span>
+          <span>→</span>
+          <span>당일 금액: 20,754,860원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 리니지 거래 급락 분석
+
+<strong>3일 연속 하락세로 보아 주중 거래량 감소의 자연스러운 추세로 판단됩니다.</strong> 특정 뉴스나 업데이트 공지가 없는 점을 고려하면, 주말(06/01)의 높은 거래 수요가 평일인 수요일(06/03)로 접어들면서 일시적으로 위축된 것으로 보입니다. 게임 거래는 여가 시간이 많은 주말에 활발하고 평일에 감소하는 계절성을 따르는 만큼, 특별한 부작용보다는 <strong>정상적인 주기적 변동</strong>으로 해석됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">26/06/03</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -17.4% / 건수 182.6%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 394,522,780원</span>
+          <span>→</span>
+          <span>당일 금액: 326,050,580원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 리니지M 거래 급변 분석
+
+<strong>금액 급락(-17.4%)의 원인:</strong>
+전일(06/02) 대비 거래금액은 감소했으나, 거래 건수가 급증(182.6%)한 점으로 보아 <strong>고가 아이템 거래 감소와 소액 다건 거래 증가 패턴</strong>으로 보입니다. 이는 대규모 유저 이탈, 플레이 시간 감소, 또는 <strong>주중(수요일) 일반적인 거래량 감소 추세</strong>로 추정되며, 직전날(06/02)의 이례적 급등(97% 상승)이 수정되는 정상화 움직임일 가능성이 높습니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">던전앤파이터</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -52.2% / 건수 -32.4%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 149,319,740원</span>
+          <span>→</span>
+          <span>당일 금액: 71,428,880원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 던전앤파이터 거래 급락 분석
+
+<strong>06/02(화요일)에 전일 대비 금액 -52.2%, 건수 -32.4%의 급락이 발생했습니다.</strong> 화요일은 일반적으로 게임 업데이트나 점검이 진행되는 요일로, 서버 점검으로 인한 플레이 시간 감소가 주요 원인으로 추측됩니다. 또한 주중 거래량은 주말에 비해 자연스럽게 감소하는 패턴을 보이므로, 정기 점검과 평일 특성이 복합적으로 작용한 것으로 판단됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">서든어택</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -40.4% / 건수 -22.8%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 77,694,120원</span>
+          <span>→</span>
+          <span>당일 금액: 46,281,680원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 서든어택 거래 급락 분석
+
+<strong>화요일의 평일 수요 감소와 주말 이후 거래량 정상화</strong>가 주요 원인으로 추정됩니다. 주말(06/01)에 집중된 거래량이 평일인 화요일로 접어들면서 자연스러운 수요 감소 패턴을 보이고 있으며, 별도의 부정적 뉴스나 긴급 업데이트 없는 점으로 볼 때 <strong>계절적·주기적 거래 변동</strong>으로 판단됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">월드오브워크래프트:클래식</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -34.9% / 건수 -37.1%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 51,465,500원</span>
+          <span>→</span>
+          <span>당일 금액: 33,519,780원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 월드오브워크래프트: 클래식 거래 급락 분석
+
+<strong>06/02(화요일)에 거래금액 34.9%, 건수 37.1%의 급락이 발생했습니다.</strong> 화요일은 일반적으로 게임 업데이트나 주간 초기화가 이루어지는 날로, 업데이트 직후 시장 변동성이 크거나 플레이어들의 활동 패턴이 변할 수 있습니다. 주중 초반으로 갈수록 주말 대비 거래 활동이 감소하는 일반적인 주간 패턴과, 혹은 최근 콘텐츠 업데이트나 시즌 변화에 따른 플레이어 관심도 저하가 복합적으로 작용했을 가능성이 높습니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -26.5% / 건수 -25.6%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 172,722,380원</span>
+          <span>→</span>
+          <span>당일 금액: 126,905,480원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 로스트아크 거래 급락 분석
+
+<strong>화요일의 자연스러운 수요 감소로 보입니다.</strong> 주말(06/01)에 높았던 거래량이 평일인 화요일로 접어들면서 약 26% 감소한 것으로, 게임 이용자들의 주중 활동 감소 패턴을 반영한 것 같습니다. 특별한 업데이트나 부정적 뉴스 없이 순수한 요일별 거래 변동성으로 판단되며, 주말까지의 추이 변화를 추적하면 정상 범위인지 확인할 수 있을 것입니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -26.3% / 건수 2.0%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 107,300,740원</span>
+          <span>→</span>
+          <span>당일 금액: 79,130,620원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 디아블로2:레저렉션 거래 급락 분석
+
+<strong>화요일의 거래금액 26.3% 급락은 주중 거래량 감소의 일반적 패턴으로 보입니다.</strong> 주말(06/01)에 비해 주중 평일인 화요일에 게이머들의 활동이 감소하면서 거래 수요가 줄어든 것으로 추정됩니다. 다만 거래 건수는 오히려 2.0% 증가한 점을 고려하면, 거래당 평균 금액이 하락했을 가능성이 높으며, 이는 저가 아이템 거래 비중 증가나 대형 거래 건의 일시적 공백으로 인한 것으로 예상됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">삼국지전략판</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -22.9% / 건수 -40.0%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 46,460,000원</span>
+          <span>→</span>
+          <span>당일 금액: 35,800,000원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 삼국지전략판 거래 급락 분석
+
+<strong>화요일의 자연스러운 거래량 감소로 추정됩니다.</strong> 주말(06/01)을 거친 직후 평일인 화요일에 거래 건수가 40% 감소한 것은 주중 거래 위축의 전형적인 패턴입니다. 특정 뉴스나 업데이트가 없는 점을 고려하면, 주기적 수요 변동이나 월초 이벤트 종료 등 게임 내 자연적 사이클에 따른 일시적 하락으로 보입니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">아이온2</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -16.8% / 건수 -18.6%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 702,007,180원</span>
+          <span>→</span>
+          <span>당일 금액: 584,248,900원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 아이온2 거래 급락 분석
+
+<strong>화요일의 자연스러운 거래량 감소로 판단됩니다.</strong> 주말(06/01)의 높은 거래량이 평일인 화요일로 접어들면서 플레이어 활동이 저하되어 거래금액 -16.8%, 건수 -18.6%의 감소가 발생한 것으로 보입니다. 특별한 부정적 뉴스나 이벤트 종료 공지가 없는 점으로 미루어, <strong>주기적인 수요 변동에 따른 정상적인 거래 패턴 변화</strong>로 해석됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리월드</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -15.3% / 건수 -15.4%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 1,036,572,380원</span>
+          <span>→</span>
+          <span>당일 금액: 877,998,620원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 메이플스토리월드 거래 급락 분석
+
+<strong>주된 원인: 주중 거래량 감소 패턴</strong>
+
+화요일의 급락은 주말(06/01 토요일)과 주중의 일반적인 거래 패턴 차이로 보입니다. 게임 거래는 주말에 활발하고 평일에 감소하는 경향이 있으며, 관련 뉴스나 업데이트 공지가 없는 점으로 보아 특별한 악재보다는 <strong>자연스러운 주기적 변동</strong>으로 판단됩니다. 향후 주말 거래량 회복 추이를 모니터링하여 정상 범위 내 변동인지 확인이 필요합니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -15.1% / 건수 -40.3%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 65,555,400원</span>
+          <span>→</span>
+          <span>당일 금액: 55,647,620원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 마비노기 거래 급락 분석
+
+<strong>06/02 화요일의 급락은 주중 거래량 감소의 일반적 패턴으로 보입니다.</strong> 금액(-15.1%)과 건수(-40.3%) 모두 하락했으며, 특히 거래 건수 감소가 두드러진 점은 주말(06/01)을 지난 후 평일로 접어들면서 유저 활동이 정상화되었음을 시사합니다. 공식 뉴스 부재를 고려하면 게임 업데이트나 이벤트 변화보다는 <strong>요일별 자연스러운 거래 수요 감소</strong>가 주된 원인으로 판단됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -13.8% / 건수 -16.7%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 36,056,520원</span>
+          <span>→</span>
+          <span>당일 금액: 31,077,320원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 리니지 거래 급락 분석
+
+<strong>화요일의 자연스러운 거래량 감소로 판단됩니다.</strong> 게임 거래는 주말(금~일)에 피크를 기록한 후 평일 초반인 화요일에 거래가 감소하는 일반적인 패턴을 보입니다. 특정 뉴스나 업데이트 공지가 없는 점을 감안하면, 월요일 대비 자연스러운 수요 감소 현상으로 해석되며, 주중 후반이나 주말에 다시 회복될 가능성이 높습니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">바람의나라</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -1.6% / 건수 -17.2%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 47,617,760원</span>
+          <span>→</span>
+          <span>당일 금액: 46,837,700원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 바람의나라 거래 급락 분석
+
+<strong>주중 평일 효과로 인한 자연스러운 거래량 감소로 판단됩니다.</strong> 화요일은 주말(토일)의 높은 거래 수요가 감소하는 시점이며, 특히 건수 감소율(-17.2%)이 금액 감소율(-1.6%)보다 크다는 점은 소액 거래 감소를 시사합니다. 공식 뉴스가 없고 추이가 완만하다는 점을 고려하면, 정기적인 주간 거래 변동성으로 보이며 향후 주말 회복을 예상할 수 있습니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">옛날바람</span>
+          <span class="alert-date">26/06/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -0.5% / 건수 31.6%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 40,552,100원</span>
+          <span>→</span>
+          <span>당일 금액: 40,350,520원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 옛날바람 거래 급변 분석
+
+<strong>거래금액은 소폭 하락(-0.5%)한 반면, 거래 건수는 31.6% 급증(114건→150건)한 것이 특징입니다.</strong> 이는 고가 거래가 감소하고 소액 거래가 증가했음을 의미하며, 화요일 평일 특성상 주말 수요 감소 후 일상적 거래 패턴으로 돌아온 것으로 보입니다. 관련 뉴스가 없는 점을 고려하면, 정기적인 주간 수요 변동이나 경미한 시즌 조정에 따른 자연스러운 거래량 재편성으로 판단됩니다.</div></div>
+        
+      </div>
         </div>
       </div>
     </div>
   </div>
-
+ 
   <div class="section">
     <div class="section-title">📈 게임별 일자별 거래금액 추이</div>
     <div class="chart-grid" id="chartGrid"></div>
   </div>
-
+ 
   <div class="section">
     <div class="section-title">📋 전체 거래 데이터</div>
     <div class="table-wrap">
       <table><thead><tr>
         <th>순위</th><th>게임명</th>
-</tr></thead><tbody>
+<th>06/1</th><th>06/2</th><th>06/3</th></tr></thead><tbody><tr><td>1</td><td>리니지클래식</td><td>1,675,851,000</td><td>1,564,557,740</td><td>1,386,920,460</td></tr><tr><td>2</td><td>메이플스토리월드</td><td>1,036,572,380</td><td class="cell-alert">877,998,620</td><td>884,382,060</td></tr><tr><td>3</td><td>메이플스토리</td><td>632,121,660</td><td class="cell-alert">924,044,840</td><td>821,962,400</td></tr><tr><td>4</td><td>아이온2</td><td>702,007,180</td><td class="cell-alert">584,248,900</td><td class="cell-alert">694,834,320</td></tr><tr><td>5</td><td>리니지M</td><td>200,742,920</td><td class="cell-alert">394,522,780</td><td class="cell-alert">326,050,580</td></tr><tr><td>6</td><td>패스오브엑자일2</td><td>165,294,380</td><td class="cell-alert">193,382,540</td><td class="cell-alert">210,235,320</td></tr><tr><td>7</td><td>로스트아크</td><td>172,722,380</td><td class="cell-alert">126,905,480</td><td>131,858,740</td></tr><tr><td>8</td><td>던전앤파이터</td><td>149,319,740</td><td class="cell-alert">71,428,880</td><td class="cell-alert">109,890,600</td></tr><tr><td>9</td><td>디아블로2:레저렉션</td><td>107,300,740</td><td class="cell-alert">79,130,620</td><td class="cell-alert">94,914,420</td></tr><tr><td>10</td><td>마비노기</td><td>65,555,400</td><td class="cell-alert">55,647,620</td><td class="cell-alert">65,746,920</td></tr><tr><td>11</td><td>서든어택</td><td>77,694,120</td><td class="cell-alert">46,281,680</td><td>51,346,200</td></tr><tr><td>12</td><td>거상</td><td>44,630,900</td><td class="cell-alert">56,900,000</td><td class="cell-alert">72,207,760</td></tr><tr><td>13</td><td>오딘:발할라라이징</td><td>32,137,140</td><td class="cell-alert">44,701,440</td><td class="cell-alert">64,027,340</td></tr><tr><td>14</td><td>옛날바람</td><td>40,552,100</td><td class="cell-alert">40,350,520</td><td class="cell-alert">55,457,980</td></tr><tr><td>15</td><td>월드오브워크래프트:클래식</td><td>51,465,500</td><td class="cell-alert">33,519,780</td><td class="cell-alert">38,981,260</td></tr><tr><td>16</td><td>바람의나라</td><td>47,617,760</td><td class="cell-alert">46,837,700</td><td class="cell-alert">28,419,660</td></tr><tr><td>17</td><td>바람의나라클래식</td><td>26,237,340</td><td class="cell-alert">37,962,020</td><td class="cell-alert">44,581,180</td></tr><tr><td>18</td><td>테일즈위버</td><td>43,584,500</td><td>38,417,160</td><td class="cell-alert">23,045,380</td></tr><tr><td>19</td><td>삼국지전략판</td><td>46,460,000</td><td class="cell-alert">35,800,000</td><td class="cell-alert">16,600,000</td></tr><tr><td>20</td><td>리니지</td><td>36,056,520</td><td class="cell-alert">31,077,320</td><td class="cell-alert">20,754,860</td></tr>
       </tbody></table>
     </div>
   </div>
-
+ 
   <div class="section">
     <div class="section-title">📝 이슈 메모</div>
     <div class="memo-section">
@@ -210,23 +789,23 @@
     <button class="save-btn" onclick="saveMemos()">💾 메모 저장</button>
     <div class="save-msg" id="saveMsg">✅ 저장되었습니다!</div>
   </div>
-
+ 
 </div>
-<footer>자동 생성: 2026-06-01 09:15 | PTS 거래데이터 분석 자동화 | itemmania 마케팅팀</footer>
-
+<footer>자동 생성: 2026-06-04 09:17 | PTS 거래데이터 분석 자동화 | itemmania 마케팅팀</footer>
+ 
 <script>
-const chartData  = {};
-const dateLabels = [];
-const alertGames = [];
+const chartData  = {"리니지클래식": [1675851000, 1564557740, 1386920460], "메이플스토리월드": [1036572380, 877998620, 884382060], "메이플스토리": [632121660, 924044840, 821962400], "아이온2": [702007180, 584248900, 694834320], "리니지M": [200742920, 394522780, 326050580], "패스오브엑자일2": [165294380, 193382540, 210235320], "로스트아크": [172722380, 126905480, 131858740], "던전앤파이터": [149319740, 71428880, 109890600], "디아블로2:레저렉션": [107300740, 79130620, 94914420], "마비노기": [65555400, 55647620, 65746920], "서든어택": [77694120, 46281680, 51346200], "거상": [44630900, 56900000, 72207760], "오딘:발할라라이징": [32137140, 44701440, 64027340], "옛날바람": [40552100, 40350520, 55457980], "월드오브워크래프트:클래식": [51465500, 33519780, 38981260], "바람의나라": [47617760, 46837700, 28419660], "바람의나라클래식": [26237340, 37962020, 44581180], "테일즈위버": [43584500, 38417160, 23045380], "삼국지전략판": [46460000, 35800000, 16600000], "리니지": [36056520, 31077320, 20754860]};
+const dateLabels = ["26/06/01", "26/06/02", "26/06/03"];
+const alertGames = ["아이온2", "메이플스토리", "메이플스토리월드", "로스트아크", "던전앤파이터", "리니지M", "거상", "디아블로2:레저렉션", "오딘:발할라라이징", "서든어택", "마비노기", "테일즈위버", "바람의나라", "옛날바람", "리니지", "바람의나라클래식", "월드오브워크래프트:클래식", "패스오브엑자일2", "삼국지전략판"];
 const THRESHOLD  = 0.15;
 const YEAR_MONTH = "2026-06";
-
+ 
 function fmt(v) {
   if (v >= 100000000) return (v/100000000).toFixed(1)+'억';
   if (v >= 10000) return Math.round(v/10000)+'만';
   return v.toLocaleString();
 }
-
+ 
 // 차트
 const grid = document.getElementById('chartGrid');
 Object.entries(chartData).forEach(([game, values], idx) => {
@@ -235,13 +814,13 @@ Object.entries(chartData).forEach(([game, values], idx) => {
   card.className = 'chart-card' + (isAlert ? ' alert-game' : '');
   card.innerHTML = `<div class="chart-title">${game}${isAlert?' <span class="badge badge-red">⚠ 이상</span>':''}</div><canvas class="chart-canvas" id="c${idx}"></canvas>`;
   grid.appendChild(card);
-
+ 
   const bgColors = values.map((v,i) => {
     if (!i) return 'rgba(88,166,255,.35)';
     const r = values[i-1] ? (v-values[i-1])/values[i-1] : 0;
     return r >= THRESHOLD ? 'rgba(248,81,73,.65)' : r <= -THRESHOLD ? 'rgba(88,166,255,.65)' : 'rgba(63,185,80,.35)';
   });
-
+ 
   new Chart(document.getElementById('c'+idx), {
     type:'bar',
     data:{ labels:dateLabels, datasets:[{ data:values, backgroundColor:bgColors,
@@ -253,7 +832,7 @@ Object.entries(chartData).forEach(([game, values], idx) => {
     }
   });
 });
-
+ 
 // 메모 저장
 const MEMO_KEY = 'pts_memo_'+YEAR_MONTH;
 function saveMemos() {
