@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게임 거래데이터 분석 — 2026-08</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+ 
+  :root {
+    --bg: #0d1117; --bg2: #161b22; --bg3: #21262d;
+    --border: #30363d; --text: #e6edf3; --muted: #8b949e;
+    --accent: #58a6ff; --green: #3fb950; --red: #f85149;
+    --yellow: #d29922; --purple: #bc8cff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Noto Sans KR',sans-serif; font-size:14px; line-height:1.6; }
+ 
+  .header { background:linear-gradient(135deg,#1a2332,#0d1117); border-bottom:1px solid var(--border); padding:28px 40px; display:flex; align-items:center; justify-content:space-between; }
+  .header h1 { font-size:20px; font-weight:700; color:var(--accent); }
+  .header .meta { color:var(--muted); font-size:12px; text-align:right; line-height:1.8; }
+ 
+  .container { max-width:100%; margin:0 auto; padding:32px 20px; }
+  .section { margin-bottom:40px; }
+  .section-title { font-size:15px; font-weight:700; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
+ 
+  .badge { display:inline-block; padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+  .badge-red    { background:rgba(248,81,73,.15);  color:var(--red);    border:1px solid rgba(248,81,73,.3); }
+  .badge-blue   { background:rgba(88,166,255,.15); color:var(--accent); border:1px solid rgba(88,166,255,.3); }
+  .badge-yellow { background:rgba(210,153,34,.15); color:var(--yellow); border:1px solid rgba(210,153,34,.3); }
+  .badge-green  { background:rgba(63,185,80,.15);  color:var(--green);  border:1px solid rgba(63,185,80,.3); }
+ 
+  .summary-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:32px; }
+  .card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:18px 20px; }
+  .card .label { color:var(--muted); font-size:12px; margin-bottom:6px; }
+  .card .value { font-size:28px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+  .card .sub   { color:var(--muted); font-size:11px; margin-top:4px; }
+ 
+  /* 급등/급락 좌우 분할 */
+  .alert-columns { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .alert-column-title { font-size:14px; font-weight:700; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid; }
+  .alert-column-title.rise { color:var(--red); border-color:var(--red); }
+  .alert-column-title.fall { color:var(--accent); border-color:var(--accent); }
+  .alert-list { display:flex; flex-direction:column; gap:10px; }
+  .alert-item { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:14px 16px; }
+  .alert-item.rise { border-left:3px solid var(--red); }
+  .alert-item.fall { border-left:3px solid var(--accent); }
+  .alert-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+  .alert-game { font-weight:700; font-size:14px; }
+  .alert-date { color:var(--muted); font-size:11px; font-family:'JetBrains Mono',monospace; }
+  .alert-rate { font-weight:700; font-family:'JetBrains Mono',monospace; font-size:13px; }
+  .rate-up { color:var(--red); }
+  .rate-down { color:var(--accent); }
+  .alert-amounts { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
+ 
+  /* 모바일 최적화 */
+  @media (max-width: 768px) {
+    .alert-columns { grid-template-columns:1fr; }
+    .container { padding:16px 16px; }
+    .header { padding:16px; flex-direction:column; gap:8px; }
+    .summary-cards { grid-template-columns:repeat(2,1fr); gap:8px; }
+    .card { padding:12px; }
+    .card .value { font-size:22px; }
+    .chart-grid { grid-template-columns:1fr; }
+    .table-wrap { font-size:11px; }
+    .alert-game { font-size:13px; }
+  }
+ 
+  /* AI 버튼 */
+  .btn-ai { display:inline-flex; align-items:center; gap:6px; padding:7px 16px; background:linear-gradient(135deg,#1c2d4f,#162032); border:1px solid rgba(88,166,255,.4); border-radius:6px; color:var(--accent); font-size:13px; font-weight:600; cursor:pointer; font-family:'Noto Sans KR',sans-serif; transition:all .2s; }
+  .btn-ai:hover { background:rgba(88,166,255,.15); border-color:var(--accent); }
+  .btn-ai:disabled { opacity:.5; cursor:not-allowed; }
+  .spinner { display:none; width:12px; height:12px; border:2px solid rgba(88,166,255,.3); border-top-color:var(--accent); border-radius:50%; animation:spin .6s linear infinite; }
+  .btn-ai.loading .spinner { display:inline-block; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+ 
+  .ai-result { display:none; margin-top:10px; background:var(--bg3); border-radius:6px; padding:12px 16px; font-size:13px; line-height:1.7; border-left:2px solid var(--accent); animation:fadeIn .3s ease; }
+  .ai-result.show { display:block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+  .ai-label { color:var(--accent); font-size:11px; font-weight:700; margin-bottom:6px; letter-spacing:.5px; }
+ 
+  .news-list { margin-top:10px; }
+  .news-item { font-size:12px; color:var(--muted); padding:5px 0; border-top:1px solid var(--border); }
+  .news-item:first-child { border-top:none; }
+  .news-item a { color:var(--accent); text-decoration:none; }
+  .news-item a:hover { text-decoration:underline; }
+ 
+  .chart-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(400px,1fr)); gap:14px; }
+  .chart-card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:16px; }
+  .chart-card.alert-game { border-color:rgba(248,81,73,.35); }
+  .chart-title { font-size:13px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .chart-canvas { height:140px !important; }
+ 
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  thead th { background:var(--bg3); color:var(--muted); padding:9px 12px; text-align:center; font-weight:600; border-bottom:1px solid var(--border); white-space:nowrap; }
+  thead th:first-child, thead th:nth-child(2) { text-align:left; }
+  tbody tr { border-bottom:1px solid var(--border); transition:background .1s; }
+  tbody tr:hover { background:var(--bg3); }
+  tbody td { padding:8px 12px; text-align:center; font-family:'JetBrains Mono',monospace; white-space:nowrap; }
+  tbody td:nth-child(2) { text-align:left; font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:500; }
+  tbody td:first-child { text-align:center; color:var(--muted); }
+  .cell-rise { background:rgba(248,81,73,.08); color:var(--red) !important; font-weight:700; }
+  .cell-fall { background:rgba(88,166,255,.08); color:var(--accent) !important; font-weight:700; }
+ 
+  .memo-section { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:20px; }
+  .memo-game { margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+  .memo-game:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .memo-label { font-size:13px; font-weight:700; margin-bottom:6px; }
+  textarea { width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:'Noto Sans KR',sans-serif; font-size:13px; padding:10px 12px; resize:vertical; min-height:60px; outline:none; transition:border-color .2s; }
+  textarea:focus { border-color:var(--accent); }
+  .save-btn { margin-top:14px; padding:9px 22px; background:var(--accent); color:#0d1117; border:none; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer; font-family:'Noto Sans KR',sans-serif; }
+  .save-btn:hover { opacity:.85; }
+  .save-msg { margin-top:6px; font-size:12px; color:var(--green); display:none; }
+ 
+  footer { text-align:center; color:var(--muted); font-size:11px; padding:20px 40px; border-top:1px solid var(--border); margin-top:40px; }
+</style>
+</head>
+<body>
+ 
+<div class="header">
+  <div>
+    <div style="color:var(--muted);font-size:12px;margin-bottom:4px;">📊 PTS 거래데이터 분석</div>
+    <h1>게임별 거래현황 리포트 — 2026-08</h1>
+  </div>
+  <div class="meta">
+    자동 생성: 2026-08-03 09:16<br>
+    분석 게임: 20개 &nbsp;|&nbsp; 이상 감지: 13건
+  </div>
+</div>
+ 
+<div style="background:var(--bg2);border-bottom:1px solid var(--border);padding:0 40px;display:flex;gap:4px;">
+  <a href="https://hyoeun-mkt.github.io/trade/daily_report/" 
+     style="display:inline-block;padding:12px 18px;font-size:13px;font-weight:700;color:var(--accent);border-bottom:2px solid var(--accent);text-decoration:none;">
+    📅 전일 대비
+  </a>
+  <a href="https://hyoeun-mkt.github.io/trade/trend_report/"
+     style="display:inline-block;padding:12px 18px;font-size:13px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;text-decoration:none;">
+    📈 트렌드 분석
+  </a>
+</div>
+ 
+<div class="container">
+ 
+  <div class="summary-cards">
+    <div class="card">
+      <div class="label">분석 게임 수</div>
+      <div class="value" style="color:var(--accent)">20</div>
+      <div class="sub">상위 20개</div>
+    </div>
+    <div class="card">
+      <div class="label">이상 감지</div>
+      <div class="value" style="color:var(--red)">13</div>
+      <div class="sub">±15% 기준</div>
+    </div>
+    <div class="card">
+      <div class="label">급등</div>
+      <div class="value" style="color:var(--red)">2</div>
+      <div class="sub">전일比 +15% 초과</div>
+    </div>
+    <div class="card">
+      <div class="label">급락</div>
+      <div class="value" style="color:var(--accent)">11</div>
+      <div class="sub">전일比 -15% 초과</div>
+    </div>
+  </div>
+ 
+  <div class="section">
+    <div class="section-title">
+      ⚠️ 급등/급락 감지
+      <span class="badge badge-red">13건</span>
+      <span style="font-size:13px;color:var(--muted);margin-left:4px;">💡 AI 분석 결과는 Claude AI 및 네이버 뉴스 기반으로 자동 생성된 참고자료이며, 요일 표기 오류가 종종 일어납니다. 양해해 주세요.</span>
+    </div>
+    <div class="alert-columns">
+      <div>
+        <div class="alert-column-title rise">🔺 급등 2건</div>
+        <div class="alert-list">
+
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리</span>
+          <span class="alert-date">08/02</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +23.0% / 건수 +71.4%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 557,342,700원</span>
+          <span>→</span>
+          <span>당일 금액: 685,307,360원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 메이플스토리 거래 급등 분석
+
+<strong>08/02 일요일의 급등은 주말 거래량 증가 패턴으로 추정됩니다.</strong> 전일 대비 금액 23.0%, 건수 71.4% 증가는 토요일 대비 일요일의 높은 게임 플레이 수요와 거래 활동 증가를 반영합니다. 특정 뉴스나 업데이트 공지가 없는 점을 감안하면, 주말 여가 시간 확대로 인한 자연스러운 거래량 증가로 보이며, 이는 게임 거래의 전형적인 주말 상승 사이클과 일치합니다.</div></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">08/02</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="alert-rate rate-up">금액 +19.5% / 건수 +-10.7%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 18,250,060원</span>
+          <span>→</span>
+          <span>당일 금액: 21,804,560원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 테일즈위버 거래 급등 분석
+
+<strong>주말 수요 증가 + 고가 아이템 거래 집중</strong>
+
+08/02 일요일에 거래금액이 19.5% 급등했으나 거래 건수는 10.7% 감소한 점으로 보아, 소수의 고가 아이템(장비, 강화석 등) 거래가 집중된 것으로 추정됩니다. 공식 뉴스가 없는 점을 고려하면 특정 이벤트나 시즌 종료 시점의 자연스러운 주말 거래 패턴으로 보이며, 단기 변동성일 가능성이 높습니다.</div></div>
+        
+      </div>
+        </div>
+      </div>
+      <div>
+        <div class="alert-column-title fall">🔻 급락 11건</div>
+        <div class="alert-list">
+
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">기타</span>
+          <span class="alert-date">08/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -62.1% / 건수 -34.1%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 25,996,200원</span>
+          <span>→</span>
+          <span>당일 금액: 9,863,810원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 기타 게임 거래 급락 분석
+
+<strong>원인 분석:</strong>
+08/02 일요일에 전일 대비 금액 -62.1%, 건수 -34.1%의 급락이 발생했습니다. 토요일(08/01)의 주말 수요 피크에서 일요일로 넘어가면서 자연스러운 거래량 감소가 일어난 것으로 보이며, 관련 뉴스 부재로 볼 때 특정 사건보다는 <strong>주중으로의 전환에 따른 수요 감소</strong>가 주요 원인으로 추정됩니다. 추가적으로 계절 이벤트 종료나 신규 콘텐츠 부재 등이 복합적으로 작용했을 가능성이 있습니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">서든어택</span>
+          <span class="alert-date">08/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -40.5% / 건수 -29.8%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 41,535,470원</span>
+          <span>→</span>
+          <span>당일 금액: 24,726,260원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 서든어택 거래 급락 분석
+
+<strong>08/02 일요일 오후~저녁시간대의 게임 이용률 감소가 주요 원인으로 추정됩니다.</strong> 주말 특성상 토요일(08/01)에 거래가 집중되었다가 일요일에 사용자들의 게임 접속이 자연스럽게 감소하면서 금액(-40.5%)과 건수(-29.8%) 모두 급락한 것으로 보입니다. 별도의 악재 뉴스가 없는 점을 고려하면, 계획된 정기 점검이나 새로운 업데이트/이벤트 진행 예정 등 예정된 변수가 있는지 확인이 필요합니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지M</span>
+          <span class="alert-date">08/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -39.9% / 건수 -57.9%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 68,283,790원</span>
+          <span>→</span>
+          <span>당일 금액: 41,062,130원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 리니지M 거래 급락 분석
+
+<strong>08/02 일요일의 급락은 주말 후반부 거래량 감소의 전형적 패턴으로 보입니다.</strong> 토요일(08/01) 피크 이후 일요일 저녁으로 접어들면서 자연스러운 거래 침체가 발생했으며, 금액 대비 건수 감소율(57.9%)이 더 큰 것으로 보아 대형 거래보다 소액 거래가 크게 줄어든 것으로 추정됩니다. 추가 공지된 업데이트나 이벤트 변화가 없다면 요일별 수요 변동으로 인한 일시적 하락으로 판단되며, 월요일 이후 거래량 회복 추이 확인이 필요합니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">08/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -39.8% / 건수 -17.7%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 45,660,350원</span>
+          <span>→</span>
+          <span>당일 금액: 27,481,750원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 거상 거래 급락 분석
+
+<strong>08/02 일요일의 급락은 주말 후반부 거래량 감소의 일반적 패턴으로 보입니다.</strong> 토요일(08/01) 피크 이후 일요일 저녁으로 갈수록 거래자들의 활동이 감소하면서 금액(-39.8%)과 건수(-17.7%) 모두 하락한 것으로 판단됩니다. 관련 뉴스나 게임 내 부정적 이벤트 없이 순수 거래량 변동만 나타난 점으로 보아, <strong>특정 원인보다는 주말 주기성에 따른 자연스러운 변동</strong>으로 해석됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">바람의나라클래식</span>
+          <span class="alert-date">08/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -39.5% / 건수 8.2%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 30,088,870원</span>
+          <span>→</span>
+          <span>당일 금액: 18,192,490원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 바람의나라클래식 거래 급락 분석
+
+<strong>주요 원인 추측:</strong>
+
+일요일이라는 요일 특성상 주말 거래 수요 감소와 함께, 금액 대폭 하락(-39.5%)에도 불구하고 건수가 증가(+8.2%)한 점으로 보아 <strong>고가 아이템 거래 부재 또는 소액 거래 위주로의 시장 전환</strong>이 발생한 것으로 보입니다. 공식 뉴스가 없는 점을 감안하면, 주간 업데이트나 신규 이벤트 종료 후 수요 조정 국면이거나 <strong>자연적인 주말 거래량 변동</strong>일 가능성이 높습니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">던전앤파이터</span>
+          <span class="alert-date">08/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -25.0% / 건수 -16.6%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 95,847,030원</span>
+          <span>→</span>
+          <span>당일 금액: 71,881,540원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 던전앤파이터 거래 급락 분석
+
+<strong>주중으로의 전환에 따른 자연스러운 하락으로 판단됩니다.</strong> 일요일은 주말 마지막 날로 주중(월~금)보다 거래 활동이 감소하는 일반적인 패턴을 보이고 있습니다. 공식 뉴스가 없는 점을 고려하면 특정 이벤트나 업데이트보다는 주기적인 거래량 변동이 주요 원인으로 보이며, 향후 월요일부터 거래량이 회복될 가능성이 높습니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">로스트아크</span>
+          <span class="alert-date">08/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -24.8% / 건수 -21.8%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 176,525,650원</span>
+          <span>→</span>
+          <span>당일 금액: 132,687,030원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 로스트아크 거래 급락 분석
+
+<strong>08/02(일요일)에 금액 -24.8%, 건수 -21.8%의 급락이 발생했습니다.</strong>
+
+주말 마지막 날인 일요일 저녁으로의 진행에 따른 거래량 감소와 주중 대비 플레이어 활동성 저하가 주요 원인으로 보입니다. 관련 뉴스가 없는 점을 고려하면 게임 내 특별 이벤트나 업데이트 같은 외부 자극 없이 자연스러운 주간 거래 패턴 변동으로 판단되며, 월요일 이후 점진적인 회복이 예상됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">오딘:발할라라이징</span>
+          <span class="alert-date">08/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -18.7% / 건수 -12.6%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 29,150,320원</span>
+          <span>→</span>
+          <span>당일 금액: 23,688,080원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 오딘:발할라라이징 거래 급락 분석
+
+<strong>주요 원인:</strong>
+일요일 저녁시간대 거래 감소로 추정됩니다. 주말 게임 플레이 수요는 토요일에 집중되고 일요일은 주중 준비로 활동이 줄어드는 일반적인 패턴이 나타난 것으로 보입니다. 특정 뉴스나 이벤트 종료 없이 자연스러운 주간 변동성으로 판단되며, 월요일 이후 거래량 회복 추이를 관찰할 필요가 있습니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">리니지클래식</span>
+          <span class="alert-date">08/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -18.3% / 건수 -8.5%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 450,870,670원</span>
+          <span>→</span>
+          <span>당일 금액: 368,192,530원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 리니지클래식 거래 급락 분석
+
+<strong>주말 효과와 요일별 거래 패턴의 영향으로 보입니다.</strong> 일요일은 토요일 대비 게임 이용자의 활동이 감소하는 경향이 있으며, 주말 후반으로 갈수록 거래량이 자연스럽게 하락하는 일반적인 패턴을 따른 것으로 판단됩니다. 특별한 뉴스나 서버 점검 공지가 없는 점을 감안하면, <strong>금액 -18.3%, 건수 -8.5%의 낙폭은 계절적·주기적 거래 변동성 범위 내에서 이해할 수 있습니다.</strong></div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리월드</span>
+          <span class="alert-date">08/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -16.0% / 건수 -12.7%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 293,302,200원</span>
+          <span>→</span>
+          <span>당일 금액: 246,390,030원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 메이플스토리월드 거래 급락 분석
+
+<strong>08/02 일요일의 16% 급락은 주말 후반부의 자연스러운 거래량 감소 현상</strong>으로 보입니다. 주말 중반(토요일)의 높은 거래 수요가 일요일 후반으로 갈수록 정체되는 전형적인 패턴이며, 특별한 이벤트나 업데이트 소식이 없는 점을 고려하면 <strong>게임 내 신규 콘텐츠 부족이나 평일로의 전환에 따른 플레이어 활동 저하</strong>가 주요 원인으로 추정됩니다.</div></div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">와우:클래식</span>
+          <span class="alert-date">08/02</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="alert-rate rate-down">금액 -8.5% / 건수 -17.6%</span>
+        </div>
+        <div class="alert-amounts">
+          <span>전일 금액: 16,191,390원</span>
+          <span>→</span>
+          <span>당일 금액: 14,821,680원</span>
+        </div>
+        <div class="ai-result show"><div class="ai-label">✦ AI 분석 결과</div><div class="ai-text"># 와우:클래식 거래 급락 분석
+
+<strong>일요일 주말 수요 감소</strong>가 주된 원인으로 보입니다. 토요일(08/01) 대비 일요일(08/02)에 거래금액 -8.5%, 건수 -17.6%로 감소한 것은 주말 중후반으로 접어들면서 게임 접속 및 거래 수요가 자연스럽게 하락하는 전형적인 패턴입니다. 특별한 업데이트나 이벤트 뉴스가 없는 점을 감안하면, <strong>계절적·시간적 변동성</strong>으로 판단되며 추후 평일(월요일)에 거래량 회복이 예상됩니다.</div></div>
+        
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="section">
+    <div class="section-title">📈 게임별 일자별 거래금액 추이</div>
+    <div class="chart-grid" id="chartGrid"></div>
+  </div>
+ 
+  <div class="section">
+    <div class="section-title">📋 전체 거래 데이터</div>
+    <div class="table-wrap">
+      <table><thead><tr>
+        <th>순위</th><th>게임명</th><th>합계</th><th>일평균</th>
+<th>08/01</th><th>08/02</th></tr></thead><tbody><tr><td>1</td><td style='text-align:left'>메이플스토리</td><td style='color:var(--yellow)'>1,242,650,060</td><td style='color:var(--muted)'>621,325,030</td><td>557,342,700</td><td class="cell-rise">685,307,360</td></tr><tr><td>2</td><td style='text-align:left'>리니지클래식</td><td style='color:var(--yellow)'>819,063,200</td><td style='color:var(--muted)'>409,531,600</td><td>450,870,670</td><td class="cell-fall">368,192,530</td></tr><tr><td>3</td><td style='text-align:left'>아이온2</td><td style='color:var(--yellow)'>687,945,880</td><td style='color:var(--muted)'>343,972,940</td><td>370,363,090</td><td>317,582,790</td></tr><tr><td>4</td><td style='text-align:left'>메이플스토리월드</td><td style='color:var(--yellow)'>539,692,230</td><td style='color:var(--muted)'>269,846,115</td><td>293,302,200</td><td class="cell-fall">246,390,030</td></tr><tr><td>5</td><td style='text-align:left'>로스트아크</td><td style='color:var(--yellow)'>309,212,680</td><td style='color:var(--muted)'>154,606,340</td><td>176,525,650</td><td class="cell-fall">132,687,030</td></tr><tr><td>6</td><td style='text-align:left'>메이플랜드</td><td style='color:var(--yellow)'>209,572,340</td><td style='color:var(--muted)'>104,786,170</td><td>101,430,240</td><td>108,142,100</td></tr><tr><td>7</td><td style='text-align:left'>던전앤파이터</td><td style='color:var(--yellow)'>167,728,570</td><td style='color:var(--muted)'>83,864,285</td><td>95,847,030</td><td class="cell-fall">71,881,540</td></tr><tr><td>8</td><td style='text-align:left'>패스오브엑자일</td><td style='color:var(--yellow)'>165,866,830</td><td style='color:var(--muted)'>82,933,415</td><td>87,356,110</td><td>78,510,720</td></tr><tr><td>9</td><td style='text-align:left'>리니지M</td><td style='color:var(--yellow)'>109,345,920</td><td style='color:var(--muted)'>54,672,960</td><td>68,283,790</td><td class="cell-fall">41,062,130</td></tr><tr><td>10</td><td style='text-align:left'>마비노기</td><td style='color:var(--yellow)'>76,650,780</td><td style='color:var(--muted)'>38,325,390</td><td>39,222,810</td><td>37,427,970</td></tr><tr><td>11</td><td style='text-align:left'>거상</td><td style='color:var(--yellow)'>73,142,100</td><td style='color:var(--muted)'>36,571,050</td><td>45,660,350</td><td class="cell-fall">27,481,750</td></tr><tr><td>12</td><td style='text-align:left'>서든어택</td><td style='color:var(--yellow)'>66,261,730</td><td style='color:var(--muted)'>33,130,865</td><td>41,535,470</td><td class="cell-fall">24,726,260</td></tr><tr><td>13</td><td style='text-align:left'>디아블로2:레저렉션</td><td style='color:var(--yellow)'>64,996,410</td><td style='color:var(--muted)'>32,498,205</td><td>33,353,590</td><td>31,642,820</td></tr><tr><td>14</td><td style='text-align:left'>오딘:발할라라이징</td><td style='color:var(--yellow)'>52,838,400</td><td style='color:var(--muted)'>26,419,200</td><td>29,150,320</td><td class="cell-fall">23,688,080</td></tr><tr><td>15</td><td style='text-align:left'>옛날바람</td><td style='color:var(--yellow)'>50,858,140</td><td style='color:var(--muted)'>25,429,070</td><td>26,648,980</td><td>24,209,160</td></tr><tr><td>16</td><td style='text-align:left'>바람의나라클래식</td><td style='color:var(--yellow)'>48,281,360</td><td style='color:var(--muted)'>24,140,680</td><td>30,088,870</td><td class="cell-fall">18,192,490</td></tr><tr><td>17</td><td style='text-align:left'>테일즈위버</td><td style='color:var(--yellow)'>40,054,620</td><td style='color:var(--muted)'>20,027,310</td><td>18,250,060</td><td class="cell-rise">21,804,560</td></tr><tr><td>18</td><td style='text-align:left'>기타</td><td style='color:var(--yellow)'>35,860,010</td><td style='color:var(--muted)'>17,930,005</td><td>25,996,200</td><td class="cell-fall">9,863,810</td></tr><tr><td>19</td><td style='text-align:left'>라그나로크</td><td style='color:var(--yellow)'>34,650,800</td><td style='color:var(--muted)'>17,325,400</td><td>17,207,190</td><td>17,443,610</td></tr><tr><td>20</td><td style='text-align:left'>와우:클래식</td><td style='color:var(--yellow)'>31,013,070</td><td style='color:var(--muted)'>15,506,535</td><td>16,191,390</td><td class="cell-fall">14,821,680</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+ 
+  <div class="section">
+    <div class="section-title">📝 이슈 메모</div>
+    <div class="memo-section">
+      <textarea id="memo_main" placeholder="이슈 메모를 입력하세요..." style="min-height:120px"></textarea>
+    </div>
+    <button class="save-btn" onclick="saveMemos()">💾 메모 저장</button>
+    <div class="save-msg" id="saveMsg">✅ 저장되었습니다!</div>
+  </div>
+ 
+</div>
+<footer>자동 생성: 2026-08-03 09:16 | PTS 거래데이터 분석 자동화 | itemmania 마케팅팀</footer>
+ 
+<script>
+const chartData  = {"메이플스토리": [557342700, 685307360], "리니지클래식": [450870670, 368192530], "아이온2": [370363090, 317582790], "메이플스토리월드": [293302200, 246390030], "로스트아크": [176525650, 132687030], "메이플랜드": [101430240, 108142100], "던전앤파이터": [95847030, 71881540], "패스오브엑자일": [87356110, 78510720], "리니지M": [68283790, 41062130], "마비노기": [39222810, 37427970], "거상": [45660350, 27481750], "서든어택": [41535470, 24726260], "디아블로2:레저렉션": [33353590, 31642820], "오딘:발할라라이징": [29150320, 23688080], "옛날바람": [26648980, 24209160], "바람의나라클래식": [30088870, 18192490], "테일즈위버": [18250060, 21804560], "기타": [25996200, 9863810], "라그나로크": [17207190, 17443610], "와우:클래식": [16191390, 14821680]};
+const dateLabels = ["08/01", "08/02"];
+const alertGames = ["리니지클래식", "메이플스토리", "메이플스토리월드", "로스트아크", "던전앤파이터", "리니지M", "거상", "오딘:발할라라이징", "서든어택", "테일즈위버", "와우:클래식", "바람의나라클래식", "기타"];
+const THRESHOLD  = 0.15;
+const YEAR_MONTH = "2026-08";
+ 
+function fmt(v) {
+  if (v >= 100000000) return (v/100000000).toFixed(1)+'억';
+  if (v >= 10000) return Math.round(v/10000)+'만';
+  return v.toLocaleString();
+}
+ 
+// 차트
+const grid = document.getElementById('chartGrid');
+Object.entries(chartData).forEach(([game, values], idx) => {
+  const isAlert = alertGames.includes(game);
+  const card = document.createElement('div');
+  card.className = 'chart-card' + (isAlert ? ' alert-game' : '');
+  card.innerHTML = `<div class="chart-title">${game}${isAlert?' <span class="badge badge-red">⚠ 이상</span>':''}</div><canvas class="chart-canvas" id="c${idx}"></canvas>`;
+  grid.appendChild(card);
+ 
+  const bgColors = values.map((v,i) => {
+    if (!i) return 'rgba(88,166,255,.35)';
+    const r = values[i-1] ? (v-values[i-1])/values[i-1] : 0;
+    return r >= THRESHOLD ? 'rgba(248,81,73,.65)' : r <= -THRESHOLD ? 'rgba(88,166,255,.65)' : 'rgba(63,185,80,.35)';
+  });
+ 
+  new Chart(document.getElementById('c'+idx), {
+    type:'bar',
+    data:{ labels:dateLabels, datasets:[{ data:values, backgroundColor:bgColors,
+      borderColor:bgColors.map(c=>c.replace(/[\d.]+\)$/,'0.9)')), borderWidth:1, borderRadius:3 }] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)+'원'}} },
+      scales:{ x:{ticks:{color:'#8b949e',font:{size:10}},grid:{color:'rgba(48,54,61,.5)'}},
+                y:{ticks:{color:'#8b949e',font:{size:10},callback:v=>fmt(v)},grid:{color:'rgba(48,54,61,.5)'}} }
+    }
+  });
+});
+ 
+// 메모 저장
+const MEMO_KEY = 'pts_memo_'+YEAR_MONTH;
+function saveMemos() {
+  const val = document.getElementById('memo_main').value;
+  localStorage.setItem(MEMO_KEY, val);
+  const msg = document.getElementById('saveMsg');
+  msg.style.display='block';
+  setTimeout(()=>msg.style.display='none', 2000);
+}
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem(MEMO_KEY);
+  if (saved) document.getElementById('memo_main').value = saved;
+});
+</script>
+</body>
+</html>
