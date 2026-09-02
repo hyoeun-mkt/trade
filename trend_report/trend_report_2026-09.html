@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게임 트렌드 분석 — 2026-09</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+  :root {
+    --bg:#0d1117; --bg2:#161b22; --bg3:#21262d;
+    --border:#30363d; --text:#e6edf3; --muted:#8b949e;
+    --accent:#58a6ff; --green:#3fb950; --red:#f85149;
+    --yellow:#d29922; --purple:#bc8cff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Noto Sans KR',sans-serif; font-size:14px; line-height:1.6; }
+  .header { background:linear-gradient(135deg,#1a2332,#0d1117); border-bottom:1px solid var(--border); padding:28px 40px; display:flex; align-items:center; justify-content:space-between; }
+  .header h1 { font-size:20px; font-weight:700; color:var(--purple); }
+  .header .meta { color:var(--muted); font-size:12px; text-align:right; line-height:1.8; }
+  .nav-tabs { background:var(--bg2); border-bottom:1px solid var(--border); padding:0 40px; display:flex; gap:4px; }
+  .nav-tabs a { display:inline-block; padding:12px 18px; font-size:13px; font-weight:600; color:var(--muted); border-bottom:2px solid transparent; text-decoration:none; }
+  .nav-tabs a.active { color:var(--purple); border-color:var(--purple); font-weight:700; }
+  .container { max-width:100%; margin:0 auto; padding:32px 20px; }
+  .section { margin-bottom:40px; }
+
+  /* 탭 */
+  .tab-btns { display:flex; gap:8px; margin-bottom:20px; }
+  .tab-btn {
+    padding:8px 20px; border-radius:6px; font-size:13px; font-weight:700;
+    cursor:pointer; border:1px solid var(--border); background:var(--bg2);
+    color:var(--muted); font-family:'Noto Sans KR',sans-serif; transition:all .2s;
+  }
+  .tab-btn.active { background:var(--purple); color:#0d1117; border-color:var(--purple); }
+  .tab-content { display:none; }
+  .tab-content.show { display:block; }
+
+  .badge { display:inline-block; padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+  .badge-red    { background:rgba(248,81,73,.15);  color:var(--red);    border:1px solid rgba(248,81,73,.3); }
+  .badge-blue   { background:rgba(88,166,255,.15); color:var(--accent); border:1px solid rgba(88,166,255,.3); }
+  .badge-purple { background:rgba(188,140,255,.15);color:var(--purple); border:1px solid rgba(188,140,255,.3); }
+  .badge-yellow { background:rgba(210,153,34,.15); color:var(--yellow); border:1px solid rgba(210,153,34,.3); }
+
+  .summary-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:32px; }
+  .card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:18px 20px; }
+  .card .label { color:var(--muted); font-size:12px; margin-bottom:6px; }
+  .card .value { font-size:28px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+  .card .sub { color:var(--muted); font-size:11px; margin-top:4px; }
+
+  .alert-columns { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .alert-column-title { font-size:14px; font-weight:700; margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid; }
+  .alert-column-title.rise { color:var(--red); border-color:var(--red); }
+  .alert-column-title.fall { color:var(--accent); border-color:var(--accent); }
+  .alert-list { display:flex; flex-direction:column; gap:10px; }
+  .alert-item { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:14px 16px; }
+  .alert-item.rise { border-left:3px solid var(--red); }
+  .alert-item.fall { border-left:3px solid var(--accent); }
+  .alert-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+  .alert-game { font-weight:700; font-size:14px; }
+  .alert-date { color:var(--muted); font-size:11px; font-family:'JetBrains Mono',monospace; }
+  .alert-rate { font-weight:700; font-family:'JetBrains Mono',monospace; font-size:13px; }
+  .rate-up { color:var(--red); }
+  .rate-down { color:var(--accent); }
+  .alert-amounts { font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-bottom:8px; }
+  .ai-result { background:var(--bg3); border-radius:6px; padding:10px 14px; font-size:13px; line-height:1.7; border-left:2px solid var(--accent); margin-top:8px; }
+  .ai-label { color:var(--accent); font-size:11px; font-weight:700; margin-bottom:4px; }
+  .news-list { margin-top:8px; }
+  .news-item { font-size:11px; color:var(--muted); padding:4px 0; border-top:1px solid var(--border); }
+  .news-item a { color:var(--accent); text-decoration:none; }
+  .empty { color:var(--muted); padding:16px; text-align:center; font-size:13px; }
+
+  footer { text-align:center; color:var(--muted); font-size:11px; padding:20px 40px; border-top:1px solid var(--border); margin-top:40px; }
+
+  @media (max-width:768px) {
+    .alert-columns { grid-template-columns:1fr; }
+    .container { padding:16px; }
+    .header { padding:16px; flex-direction:column; gap:8px; }
+    .summary-cards { grid-template-columns:repeat(2,1fr); }
+    .nav-tabs { padding:0 16px; }
+    .tab-btns { flex-wrap:wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div style="color:var(--muted);font-size:12px;margin-bottom:4px;">📊 PTS 거래데이터 분석</div>
+    <h1>게임별 트렌드 분석 리포트 — 2026-09</h1>
+  </div>
+  <div class="meta">
+    자동 생성: 2026-09-02 09:15<br>
+    7일이동평균: 0건 &nbsp;|&nbsp; 전월대비: 12건
+  </div>
+</div>
+
+<div class="nav-tabs">
+  <a href="https://hyoeun-mkt.github.io/trade/daily_report/">📅 전일 대비</a>
+  <a href="https://hyoeun-mkt.github.io/trade/trend_report/" class="active">📈 트렌드 분석</a>
+</div>
+
+<div class="container">
+
+  <div class="summary-cards">
+    <div class="card">
+      <div class="label">7일 이동평균 이상</div>
+      <div class="value" style="color:var(--purple)">0</div>
+      <div class="sub">±15% 기준</div>
+    </div>
+    <div class="card">
+      <div class="label">전월 대비 이상</div>
+      <div class="value" style="color:var(--yellow)">12</div>
+      <div class="sub">2026-08 일평균 기준</div>
+    </div>
+    <div class="card">
+      <div class="label">급등 (전체)</div>
+      <div class="value" style="color:var(--red)">10</div>
+      <div class="sub">7일평균+전월대비</div>
+    </div>
+    <div class="card">
+      <div class="label">급락 (전체)</div>
+      <div class="value" style="color:var(--accent)">2</div>
+      <div class="sub">7일평균+전월대비</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="tab-btns" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <button class="tab-btn active" onclick="switchTab('moving')">
+        📊 7일 이동평균 0건
+      </button>
+      <button class="tab-btn" onclick="switchTab('prev')">
+        📅 전월 대비 12건
+      </button>
+      <span style="font-size:13px;color:var(--muted);margin-left:4px;">💡 AI 분석 결과는 Claude AI 및 네이버 뉴스 기반으로 자동 생성된 참고자료이며, 요일 표기 오류가 종종 일어납니다. 양해해 주세요.</span>
+    </div>
+
+    <div class="tab-content show" id="tab-moving">
+      
+    <div class="alert-columns">
+      <div>
+        <div class="alert-column-title rise">🔺 급등 0건</div>
+        <div class="alert-list"><div class="empty">급등 없음</div></div>
+      </div>
+      <div>
+        <div class="alert-column-title fall">🔻 급락 0건</div>
+        <div class="alert-list"><div class="empty">급락 없음</div></div>
+      </div>
+    </div>
+    </div>
+
+    <div class="tab-content" id="tab-prev">
+      
+    <div class="alert-columns">
+      <div>
+        <div class="alert-column-title rise">🔺 급등 10건</div>
+        <div class="alert-list">
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">디아블로2:레저렉션</span>
+          <span class="alert-date">당월평균</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-yellow">전월대비</span>
+          <span class="alert-rate rate-up">+98.6%</span>
+        </div>
+        <div class="alert-amounts">전월 일평균: 37,851,256원 → 당월 일평균: 75,171,250원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석 결과 <span style="font-weight:400;color:var(--muted)">(참고용 — 공식 공지 확인 권장)</span></div># 디아블로2: 레저렉션 거래 급등 분석
+
+<strong>98.6%의 급등은 월말/월초 결제 집중 또는 게임 내 시즌 업데이트와 연관성이 높습니다.</strong> 전월 대비 거래금액이 약 2배 증가한 것으로 보아, 신규 시즌 시작, 기간 한정 이벤트, 또는 주기적 아이템 판매 이벤트가 동시에 진행되었을 가능성이 큽니다. 공식 뉴스 공지가 없다면 정기적인 인게임 이벤트 사이클에 따른 자연스러운 거래량 변동으로 판단되며, 추후 안정화 추이를 모니터링이 필요합니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">라그나로크</span>
+          <span class="alert-date">당월평균</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-yellow">전월대비</span>
+          <span class="alert-rate rate-up">+89.8%</span>
+        </div>
+        <div class="alert-amounts">전월 일평균: 15,672,446원 → 당월 일평균: 29,751,250원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석 결과 <span style="font-weight:400;color:var(--muted)">(참고용 — 공식 공지 확인 권장)</span></div># 라그나로크 거래 급등 분석
+
+<strong>라그나로크의 거래금액이 전월 대비 89.8% 급등한 것으로 보아, 신규 콘텐츠 업데이트나 대규모 이벤트(시즌 시작, 던전 오픈 등)가 진행되었을 가능성이 높습니다.</strong> 공식 뉴스가 없는 점을 감안하면 게임 내 이벤트나 아이템 한정 판매로 인한 수요 증가, 또는 월초/월중 시즌 갱신 시점과 맞물린 거래 몰림 현상으로 추정됩니다. 지속성을 확인하기 위해 익월 데이터와 인게임 공지사항을 모니터링할 필요가 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">테일즈위버</span>
+          <span class="alert-date">당월평균</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-yellow">전월대비</span>
+          <span class="alert-rate rate-up">+70.8%</span>
+        </div>
+        <div class="alert-amounts">전월 일평균: 19,449,993원 → 당월 일평균: 33,227,010원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석 결과 <span style="font-weight:400;color:var(--muted)">(참고용 — 공식 공지 확인 권장)</span></div># 테일즈위버 거래 급등 분석
+
+전월 대비 70.8% 급등으로 거래금액이 약 1.9배 증가한 것으로 보아, <strong>정기 업데이트나 신규 콘텐츠 패치, 혹은 기간 한정 이벤트 개최</strong>가 주요 원인으로 추정됩니다. 공식 뉴스가 없는 점을 감안하면 <strong>월말/월초 결산 시즌이나 주말 거래 집중</strong>, 혹은 <strong>게임 내 시즌 변경에 따른 아이템 거래량 급증</strong>일 가능성이 높습니다. 향후 거래량 추이를 통해 일시적 변동인지 지속적 상승인지 확인이 필요합니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">서든어택</span>
+          <span class="alert-date">당월평균</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-yellow">전월대비</span>
+          <span class="alert-rate rate-up">+64.3%</span>
+        </div>
+        <div class="alert-amounts">전월 일평균: 27,227,122원 → 당월 일평균: 44,747,620원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석 결과 <span style="font-weight:400;color:var(--muted)">(참고용 — 공식 공지 확인 권장)</span></div># 서든어택 거래 급등 분석
+
+<strong>전월 대비 64.3% 급등</strong>으로 거래금액이 27.2백만 원에서 44.7백만 원으로 증가했습니다. 관련 뉴스가 없는 점을 고려하면, <strong>신규 시즌 또는 대규모 업데이트 시작, 기간 한정 이벤트(보상 이벤트, 신무기 출시 등), 또는 계절 변화에 따른 게이머 복귀 현상</strong>이 주요 원인으로 추정됩니다. 일반적으로 게임 거래는 신규 콘텐츠 출시 초기에 활발하므로, 현재의 높은 거래량이 지속되는지 추이 모니터링이 필요합니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">던전앤파이터</span>
+          <span class="alert-date">당월평균</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-yellow">전월대비</span>
+          <span class="alert-rate rate-up">+38.7%</span>
+        </div>
+        <div class="alert-amounts">전월 일평균: 52,860,715원 → 당월 일평균: 73,338,480원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석 결과 <span style="font-weight:400;color:var(--muted)">(참고용 — 공식 공지 확인 권장)</span></div># 던전앤파이터 거래 급등 분석
+
+<strong>38.7% 급등의 주요 원인:</strong>
+
+관련 뉴스가 없는 점을 고려하면, <strong>월중 신규 업데이트나 계절 이벤트 시작</strong>, 혹은 <strong>시즌 종료 전 아이템 거래 수요 증가</strong>가 주요 원인으로 추정됩니다. 장기 운영 게임인 던전앤파이터의 특성상 정기적인 패치 주기나 제한된 기간의 프로모션이 거래량을 크게 자극하는 경향이 있습니다. 향후 이달 말과 다음월 초의 거래량 추이를 관찰하여 지속성 여부를 확인할 필요가 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">와우:클래식</span>
+          <span class="alert-date">당월평균</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-yellow">전월대비</span>
+          <span class="alert-rate rate-up">+38.1%</span>
+        </div>
+        <div class="alert-amounts">전월 일평균: 15,329,345원 → 당월 일평균: 21,171,590원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석 결과 <span style="font-weight:400;color:var(--muted)">(참고용 — 공식 공지 확인 권장)</span></div># 와우:클래식 거래 급등 분석
+
+<strong>전월대비 38.1% 급등</strong>의 주요 원인은 <strong>신규 시즌 시작, 대규모 업데이트, 또는 제한된 기간의 이벤트</strong> 로 추정됩니다. 와우:클래식은 콘텐츠 시즌 전환 시 유저들의 귀환과 아이템 거래 수요가 급증하는 특성을 보이며, 특히 신규 레이드나 던전 오픈 직후 장비 거래가 활발해집니다. 당월 누적 거래량이 전월보다 현저히 높은 점을 고려하면 <strong>지속적인 수요 증가</strong>로 보여, 일시적 변동보다는 게임 내 주요 콘텐츠 업데이트에 따른 구조적 거래 활성화로 판단됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">메이플스토리월드</span>
+          <span class="alert-date">당월평균</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-yellow">전월대비</span>
+          <span class="alert-rate rate-up">+36.0%</span>
+        </div>
+        <div class="alert-amounts">전월 일평균: 184,370,649원 → 당월 일평균: 250,696,570원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석 결과 <span style="font-weight:400;color:var(--muted)">(참고용 — 공식 공지 확인 권장)</span></div># 메이플스토리월드 거래 급등 분석
+
+<strong>메이플스토리월드의 당월 평균 거래금액이 전월 대비 36% 급등했으며, 이는 신규 콘텐츠 업데이트나 시즌 시작, 또는 기간 한정 이벤트 운영으로 인한 수요 증가가 주요 원인으로 추정됩니다.</strong> 관련 뉴스가 없는 점을 감안하면 게임 내 자체 이벤트나 마일드한 업데이트 사이클의 영향으로 보이며, <strong>월말 수렴 추세를 고려할 때 일시적 급등보다는 월 초 대규모 이벤트나 계절 시즌 전환에 따른 지속적 관심 증가로 판단됩니다.</strong></div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">메이플랜드</span>
+          <span class="alert-date">당월평균</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-yellow">전월대비</span>
+          <span class="alert-rate rate-up">+30.9%</span>
+        </div>
+        <div class="alert-amounts">전월 일평균: 89,286,154원 → 당월 일평균: 116,838,540원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석 결과 <span style="font-weight:400;color:var(--muted)">(참고용 — 공식 공지 확인 권장)</span></div># 메이플랜드 거래 급등 분석
+
+<strong>메이플랜드의 거래금액이 전월 대비 30.9% 급등한 것으로 보아, 신규 콘텐츠 업데이트나 시즌 변경, 또는 제한된 기간의 이벤트 진행이 주요 원인으로 추정됩니다.</strong> 공식 뉴스가 없는 점을 고려하면, 게임 내 자체 업데이트나 시즈널 이벤트로 인한 수요 증가일 가능성이 높습니다. 이러한 급등 추세가 지속되는지 모니터링이 필요하며, 다음 달 데이터를 통해 일시적 현상인지 추세인지 판단할 수 있을 것으로 예상됩니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">마비노기</span>
+          <span class="alert-date">당월평균</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-yellow">전월대비</span>
+          <span class="alert-rate rate-up">+29.6%</span>
+        </div>
+        <div class="alert-amounts">전월 일평균: 35,034,297원 → 당월 일평균: 45,411,400원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석 결과 <span style="font-weight:400;color:var(--muted)">(참고용 — 공식 공지 확인 권장)</span></div># 마비노기 거래 급등 분석
+
+<strong>마비노기의 월평균 거래금액이 전월 대비 29.6% 급등한 것으로 보아, 신규 콘텐츠 업데이트나 제한된 기간의 이벤트(시즌 한정 아이템, 던전 이벤트 등)가 진행되었을 가능성이 높습니다.</strong> 공식 뉴스 부재에도 불구하고 거래량 증가는 플레이어들의 구매 심리 자극을 의미하므로, 게임 내 경제 활성화 이벤트나 인기 아이템 재출시 같은 운영 활동이 있었을 것으로 추정됩니다. 향후 이벤트 종료 시점에서 거래량 정상화 추이를 모니터링할 필요가 있습니다.</div>
+        
+      </div>
+      <div class="alert-item rise">
+        <div class="alert-header">
+          <span class="alert-game">오딘:발할라라이징</span>
+          <span class="alert-date">당월평균</span>
+          <span class="badge badge-red">급등 🔺</span>
+          <span class="badge badge-yellow">전월대비</span>
+          <span class="alert-rate rate-up">+25.2%</span>
+        </div>
+        <div class="alert-amounts">전월 일평균: 26,570,305원 → 당월 일평균: 33,267,830원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석 결과 <span style="font-weight:400;color:var(--muted)">(참고용 — 공식 공지 확인 권장)</span></div># 오딘:발할라라이징 거래급등 분석
+
+<strong>원인:</strong> 카카오게임즈의 편의성 개선 업데이트와 연계 이벤트('굿바이 썸머! 교환 이벤트' 등)가 주요 요인으로 보입니다. 업데이트 직후 플레이어 복귀 및 신규 유입이 증가하면서 게임 내 거래 활동이 활성화된 것으로 판단됩니다. 전월 대비 25.2% 상승은 의도된 개선 업데이트의 긍정적 반응이 즉시 거래량에 반영된 결과로 해석됩니다.</div>
+        <div class="news-list"><div class="news-item">📰 <a href="https://www.newsworks.co.kr/news/articleView.html?idxno=851561" target="_blank">[게임스테이션] '로아'-'오딘'-'솔' 업뎃·신작명 '라이크 오어 다이'·엔...</a></div></div>
+      </div></div>
+      </div>
+      <div>
+        <div class="alert-column-title fall">🔻 급락 2건</div>
+        <div class="alert-list">
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">패스오브엑자일</span>
+          <span class="alert-date">당월평균</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-yellow">전월대비</span>
+          <span class="alert-rate rate-down">-51.2%</span>
+        </div>
+        <div class="alert-amounts">전월 일평균: 49,934,720원 → 당월 일평균: 24,364,510원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석 결과 <span style="font-weight:400;color:var(--muted)">(참고용 — 공식 공지 확인 권장)</span></div># 패스오브엑자일 거래 급락 분석
+
+<strong>51.2%의 급락은 시즌 종료 또는 대규모 업데이트 대기 시기로 추정됩니다.</strong> 현재 뉴스 부재와 함께 고려하면, 이전 시즌/리그가 종료되고 새로운 콘텐츠 출시 전 유저 활동이 급감한 것으로 보입니다. 일반적으로 게임 거래량은 신규 업데이트나 시즌 개편 직후 회복될 가능성이 높으므로, 단기적 변동성이 높을 것으로 예상됩니다.</div>
+        
+      </div>
+      <div class="alert-item fall">
+        <div class="alert-header">
+          <span class="alert-game">거상</span>
+          <span class="alert-date">당월평균</span>
+          <span class="badge badge-blue">급락 🔻</span>
+          <span class="badge badge-yellow">전월대비</span>
+          <span class="alert-rate rate-down">-22.4%</span>
+        </div>
+        <div class="alert-amounts">전월 일평균: 29,933,956원 → 당월 일평균: 23,226,080원</div>
+        <div class="ai-result"><div class="ai-label">✦ AI 분석 결과 <span style="font-weight:400;color:var(--muted)">(참고용 — 공식 공지 확인 권장)</span></div># 거상 거래액 급락 분석
+
+<strong>거래액이 전월 대비 22.4% 하락한 것은 정기 업데이트나 신규 콘텐츠 부재로 인한 유저 관심도 저하가 주요 원인으로 보입니다.</strong> 공식 뉴스가 없는 점을 고려하면, 월간 사이클상 신규 이벤트나 대규모 패치 없이 진행된 시즌 말이거나 콘텐츠 공백기일 가능성이 높습니다. 안정적인 회복을 위해서는 다음 업데이트 시점에 수집 콘텐츠 강화나 신규 시스템 도입 등 유저 재유입 전략이 필요할 것으로 예상됩니다.</div>
+        
+      </div></div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+</div>
+<footer>자동 생성: 2026-09-02 09:15 | PTS 트렌드 분석 자동화 | itemmania 마케팅팀</footer>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('show'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('show');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
